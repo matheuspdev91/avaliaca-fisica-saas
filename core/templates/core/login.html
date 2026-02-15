@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<section class="container" style="max-width: 400px; margin-top: 80px;">
+    <h2>Entrar</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div>
+            <label>Usuário</label><br>
+            <input type="text" name="username" required>
+        </div>
+        
+        <br>
+        <div>
+            <label>SENHA</label><br>
+            <input type="password" name="password" required>
+        </div>
+        
+        <br>
+
+        <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+</section>
+{% endblock %}
+
+        

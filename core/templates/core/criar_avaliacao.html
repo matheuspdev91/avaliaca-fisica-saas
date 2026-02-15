@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Avaliação</title>
+    <link rel="stylesheet" href="{% static 'global/style.css' %}">
+</head>
+<body>
+
+    <section class="page-section">
+        <div class="container">
+
+            <h1 class="page-titile">Nova Avaliação</h1>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="card">
+                    <h2>Dados pessoais</h2>
+                    {{ avaliacao_form.as_p}}
+                </div>
+
+                <div class="card">
+                    <h2>Circunferências</h2>
+                    {{ circ_form.as_p }}
+                </div>
+
+                <div class="card">
+                    {{ Adipometria }}
+                    {{ adip_form.as_p}}
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit">
+                        Salvar Avaliação
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </section>
+    
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+{% block content %}
+
+<div class="acoes">
+    <a href="{% url 'dashboard' avaliacao.id %}" class="btn btn-primary">
+        Ver Dashboard
+    </a>
+
+    <a href="{% url 'editar_avaliacao' avaliacao.id %}" class="btn btn-editar">
+        Editar
+    </a>
+
+    <a href="{% url 'excluir_avaliacao' avaliacao.id %}"
+        class="btn btn-excluir"
+        onclick="return confirm('Tem certeza que deseja excluir esta avaliação?')">
+        Excluir
+    </a>
+</div>
+
+<h1>{{ avaliacao.nome }}</h1>
+<p><strong>Percentual:</strong> {{ avaliacao.percentual|floatformat:2 }}%</p>
+<p><strong>Sexo:</strong> {{ avaliacao.get_sexo_display }}</p>
+<p><strong>Altura:</strong> {{ avaliacao.altura }}</p>
+<p><strong>Peso:</strong> {{ avaliacao.peso }}</p>
+
+{% endblock %}

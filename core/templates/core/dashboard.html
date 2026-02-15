@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h2>Dashboard da Avaliação</h2>
+
+<div class="card">
+    <h3>Resultado Avaliação</h3>
+
+    <p><strong>Nome:</strong> {{ avaliacao.nome }}</p>
+    <p><strong>Data:</strong> {{ avaliacao.criado_em|date:"d/m/Y" }}</p>
+
+    <hr>
+
+    <p><strong>Percentual:</strong> {{ avaliacao.percentual|floatformat:2 }}%</p>
+    <p><strong>Massa gorda:</strong> {{ avaliacao.massa_gorda|floatformat:2 }} kg</p>
+    <p><strong>Massa magra:</strong> {{ avaliacao.massa_magra|floatformat:2 }} kg</p>
+</div>
+
+<a href="{% url 'detalhe_avaliacao' avaliacao.id %}" class="btn">
+    Voltar
+</a>
+
+{% endblock %}

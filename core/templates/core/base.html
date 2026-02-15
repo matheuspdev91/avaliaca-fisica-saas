@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Meu site{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'global/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'global/favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>FitSaaS</h2>
+            </div>
+
+            <nav>
+                
+                <a href="{% url 'avaliacoes' %}">Avaliações</a>
+                <a href="{% url 'criar_avaliacao' %}">Nova avaliação</a>
+            </nav>
+        </aside>
+
+    <div class="main">
+        <header class="topbar">
+            <div></div>
+            <div class="user">
+                {{ request.user.username }}
+                <a href="{% url 'logout' %}" class="btn-logout"></a>
+            </div>
+        </header>
+
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+
+    </div>
+
+</div>
+    
+
+<footer>
+    <small>@ 2026 - django</small>
+</footer>
+
+</body>
+</html>

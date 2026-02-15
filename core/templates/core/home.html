@@ -1,0 +1,52 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block nav-actions %}
+<a href="#" class="btn-secondary">Entrar</a>
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-content">
+
+        <h1 class="hero-title">Fit Control</h1>
+
+        <p class="hero-tagline">
+            Tudo sobre evolução corporal, em um só lugar
+        </p>
+
+        <div class="hero-actions">
+            <a href="{% url 'login' %}" class="btn btn-primary">Entrar</a>
+            <a href="{% url 'register' %}" class="btn btn-secondary">Criar conta</a>
+        </div>
+
+    </div>
+</section>
+
+<section class="features container">
+
+    <div class="feature-card">
+        <h3>Avaliação completa</h3>
+        <p>
+            Dobras cutâneas, circunferências e cálculos automáticos
+        </p>
+    </div>
+
+    <div class="feature-card">
+        <h3>Evolução do aluno</h3>
+        <p>
+            Visualize o progresso a longo prazo
+        </p>
+    </div>
+
+    <div class="feature-card">
+        <h3>Acesso controlado</h3>
+        <p>
+            Cada profissional com sua própria conta
+        </p>
+    </div>
+
+</section>
+
+{% endblock %}

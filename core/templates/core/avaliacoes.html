@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+{% block content %}
+
+<section class="container">
+    <h1>Avaliações</h1>
+    
+    <div style="margin: 20px 0;">
+        <a href="{% url 'criar_avaliacao' %}" class="btn btn-primary">
+            Nova Avaliação
+        </a>
+    </div>
+
+    <ul>
+        {% for avaliacao in avaliacoes %}
+        <li>
+            <strong>{{ avaliacao.nome }}</strong> -
+            {{ avaliacao.criado_em|date:"d/m/Y" }}
+
+            <a href="{% url 'detalhe_avaliacao' avaliacao.id %}">
+                Visualizar
+            </a>
+        </li>
+        {% empty %}
+        <p>Você ainda não possui avaliação</p>
+        {% endfor %}
+    </ul>
+</section>
+
+{% endblock %}
