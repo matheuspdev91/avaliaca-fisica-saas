@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-!57*5l#o8g!b!0=vpq4!l90ubg8^m7_kv+n$m2u0a3day)l^^9
 
 # SECURITY WARNING: don't run with debug turned on in production!
 import os
-DEBUG = os.environ.get("DEBUGM", "False") == True
+DEBUG = os.environ.get("DEBUGM", "False") == "True"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -76,18 +76,14 @@ WSGI_APPLICATION = 'projeto.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'avaliacao_fisica',
-        'USER': 'django',
-        'PASSWORD': 'django123',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 
@@ -128,7 +124,7 @@ USE_TZ = True
 
 import os
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticcfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'static/'
 
 
