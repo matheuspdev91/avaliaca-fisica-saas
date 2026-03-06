@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import ssl
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +27,7 @@ SECRET_KEY = 'django-insecure-!57*5l#o8g!b!0=vpq4!l90ubg8^m7_kv+n$m2u0a3day)l^^9
 
 # SECURITY WARNING: don't run with debug turned on in production!
 import os
-DEBUG = os.environ.get("DEBUGM", "False") == "True"
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -57,7 +60,7 @@ ROOT_URLCONF = 'projeto.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,9 +84,10 @@ import os
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
+        default=f'sqlite:///{str(BASE_DIR / 'db.sqlite3')}',
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=False
+        
     )
 }
 
@@ -124,9 +128,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 import os
+import ssl
+import certifi
+
+ssl_conext = ssl.create_default_context(cafile=certifi.where())
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 
 
@@ -135,3 +143,16 @@ LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False  
+EMAIL_USE_SSL = True
+
+EMAIL_HOST_USER = "apikey"
+EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
+
+DEFAULT_FROM_MAIL ='mpdev34@gmail.com'
+AUTH_USER_MODEL = 'core.Usuario'
+

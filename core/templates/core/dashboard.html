@@ -1,26 +1,126 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+<div class="dashboard-container">
+    <div class="modelo-3d">
+        {% if avaliacao.sexo == 'M' %}
+            <img src="{% static 'img/masculino.png' %}" alt="Modelo masculino">
+        {% elif avaliacao.sexo == 'F' %}
+            <img src="{% static 'img/feminino.png' %}" alt="Modelo feminino">
+        {% endif %}
+    </div>
 
-<h2>Dashboard da Avaliação</h2>
+    <div class="grafico-area">
+        <div class="grafico-card">
+            <h2>Composição Corporal</h2>
+            
+            <!-- ✅ CANVAS COM ID CORRETO -->
+            <div style="width: 300px; height: 300px; margin: 0 auto;">
+                <canvas id="graficoPizza"></canvas>
+            </div>
 
-<div class="card">
-    <h3>Resultado Avaliação</h3>
+            <!-- Dados para debug (pode remover depois) -->
+            <div style="margin-top: 20px; text-align: center;">
+                <p><strong>Percentual:</strong> {{ avaliacao.percentual|default:"0" }}%</p>
+                <p><strong>Massa gorda:</strong> {{ avaliacao.massa_gorda|default:"0" }} kg</p>
+                <p><strong>Massa magra:</strong> {{ avaliacao.massa_magra|default:"0" }} kg</p>
+                <p><strong>Massa residual:</strong> {{ avaliacao.massa_residual|default:"0" }} kg</p>
+            </div>
+        </div>
+    </div>
 
-    <p><strong>Nome:</strong> {{ avaliacao.nome }}</p>
-    <p><strong>Data:</strong> {{ avaliacao.criado_em|date:"d/m/Y" }}</p>
-
-    <hr>
-
-    <p><strong>Percentual:</strong> {{ avaliacao.percentual|floatformat:2 }}%</p>
-    <p><strong>Massa gorda:</strong> {{ avaliacao.massa_gorda|floatformat:2 }} kg</p>
-    <p><strong>Massa magra:</strong> {{ avaliacao.massa_magra|floatformat:2 }} kg</p>
+    <a href="{% url 'detalhe_avaliacao' avaliacao.id %}" class="btn">Voltar</a>
 </div>
+{% endblock %}
 
-<a href="{% url 'detalhe_avaliacao' avaliacao.id %}" class="btn">
-    Voltar
-</a>
+{% block scripts %}
+<!-- ✅ Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
+<script>
+    // ✅ Aguarda DOM carregar completamente
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // ✅ Pega o canvas
+        const ctx = document.getElementById('graficoPizza');
+        
+        // ✅ Verifica se canvas existe
+        if (!ctx) {
+            console.error('ERRO: Canvas #graficoPizza não encontrado!');
+            return;
+        }
+
+        // ✅ Pega dados do Django com segurança (filtros default)
+        const massaGorda = parseFloat('{{ avaliacao.massa_gorda|default:"0" }}') || 0;
+        const massaMagra = parseFloat('{{ avaliacao.massa_magra|default:"0" }}') || 0;
+        const massaResidual = parseFloat('{{ avaliacao.massa_residual|default:"0" }}') || 0;
+        
+        // ✅ Debug no console (F12 > Console)
+        console.log('Dados do gráfico:', {
+            massaGorda: massaGorda,
+            massaMagra: massaMagra,
+            massaResidual: massaResidual
+        });
+
+        // ✅ Verifica se há dados
+        if (massaGorda === 0 && massaMagra === 0) {
+            console.warn('Atenção: Sem dados para o gráfico!');
+            ctx.parentElement.innerHTML = '<p style="color: red;">Dados não disponíveis</p>';
+            return;
+        }
+
+        // ✅ Cria o gráfico
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Massa Gorda', 'Massa Magra', 'Massa Residual'],
+                datasets: [{
+                    data: [massaGorda, massaMagra, massaResidual],
+                    backgroundColor: [
+                        '#ef4444',  // Vermelho - gorda
+                        '#10b981',  // Verde - magra  
+                        '#3b82f6'   // Azul - residual
+                    ],
+                    borderWidth: 3,
+                    borderColor: '#ffffff',
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: '70%',  // Tamanho do buraco no meio
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            },
+                            color: '#333'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                return `${label}: ${value.toFixed(1)}kg (${percent}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        console.log('✅ Gráfico criado com sucesso!');
+    });
+</script>
 {% endblock %}

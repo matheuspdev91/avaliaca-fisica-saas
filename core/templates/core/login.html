@@ -22,8 +22,16 @@
         
         <br>
 
-        <button type="submit" class="btn btn-primary">Entrar</button>
+        <button type="submit" class="btn btn-primary">
+            Entrar            
+        </button>
     </form>
+
+    <p style="margin-top: 15px; text-align: center;">
+        <a href="{% url 'password_reset' %}">
+            Esqueci minha senha
+        </a>
+    </p>
 </section>
 {% endblock %}
 

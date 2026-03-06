@@ -1,6 +1,16 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from datetime import date
+from django.contrib.auth.models import AbstractUser
+
+
+class Usuario(AbstractUser):
+    email = models.EmailField(unique=True)
+    cref = models.CharField(max_length=20)
+    telefone = models.CharField(max_length=20)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
 
 class AvaliacaoFisica(models.Model):
@@ -10,7 +20,7 @@ class AvaliacaoFisica(models.Model):
     )
 
     data = models.DateTimeField(auto_now_add=True)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
     sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
     data_nascimento = models.DateField()
@@ -85,6 +95,14 @@ class AvaliacaoFisica(models.Model):
         if mg is not None:
             return round(float(self.peso) - mg, 2)
         return None
+
+
+    @property
+    def massa_residual(self):
+        if self.sexo == 'F':
+            return round(float(self.peso) * 0.241,2)
+        else:
+            return round(float(self.peso) * 0.269,2)
 
 
 class Circunferencia(models.Model):

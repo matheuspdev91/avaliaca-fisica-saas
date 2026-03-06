@@ -4,10 +4,10 @@ from .models import AvaliacaoFisica
 
 class AvaliacaoFisicaAdmin(admin.ModelAdmin):
     list_display = (
-    'nome',
-    'peso',
-    'sexo',
-    'criado_em'
+        'nome',
+        'peso',
+        'sexo',
+        'criado_em'
 )
     
     search_fields = ('nome',)

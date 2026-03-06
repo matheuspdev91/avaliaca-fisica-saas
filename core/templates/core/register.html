@@ -1,43 +1,67 @@
-{% extends "core/base.html"}
+{% extends 'core/base.html' %}
 
 {% load static %}
 
 {% block content %}
-
-
 <section class="container" style="max-width: 400px; margin-top: 80px;">
     <h2>Criar conta</h2>
 
-
     <form method="POST">
+        {% csrf_token %}
+        
+        <!-- ✅ Mensagens - SEM CSS inline com Django tags -->
         {% if messages %}
             {% for message in messages %}
-                <p style="color: red;">{{ message }}</p>
-                {% endfor %}
-
-            {% endif %}
-      
-      
-        {% csrf_token %}
+                {% if message.tags == 'error' %}
+                    <div style="color: red; background: #ffe6e6; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div style="color: green; background: #e6ffe6; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
       
         <div>
             <label>Usuário</label><br>
-            <input type="text" name="username" required>
+            <input type="text" name="username" value="{{ username|default:'' }}" required>
+        </div>
+
+        <br>
+
+        <div>
+            <label>Email</label><br>
+            <input type="email" name="email" value="{{ email|default:'' }}" required>
         </div>
 
         <br>
 
         <div>
             <label>Senha</label><br>
-            <input type="password" name="password" required>
+            <input type="password" name="password" minlength="6" required>
+            <small style="color: #666; font-size: 12px;">Mínimo 6 caracteres</small>
         </div>
 
         <br>
+
+        <div>
+            <label>Confirmar Senha</label><br>
+            <input type="password" name="password_confirm" required>
+        </div>
+
+        <br>
+        
         <button type="submit" class="btn btn-primary">
             Criar conta
         </button> 
 
+        <br><br>
+        
+        <p style="text-align: center;">
+            Já tem conta? <a href="{% url 'login' %}">Entrar</a>
+        </p>
     </form>
 </section>
-
 {% endblock %}

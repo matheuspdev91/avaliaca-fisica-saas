@@ -357,3 +357,64 @@ textarea:focus {
     color: #6b7280;
     margin-left: 4px;
 }
+
+
+
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-items: center;
+    gap: 50px;
+    padding: 70px 20px;
+}
+
+.modelo-3d img {
+    width: 350px;
+    height: auto;
+}
+
+.modelo-feminino {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow:  0 4px 12px rgba(0,0,0,0.8);
+
+}
+
+   
+
+.modelo-masculino{
+    background: #f1f3f5;
+    padding: 25px;
+    border-radius: 16px;
+}
+
+
+
+.grafico-area {
+    max-width: 400px;
+}
+
+#grafico_pizza {
+    max-width: 400px;
+    max-width: 400px;
+}
+
+.grafico-card {
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.resultado {
+    margin-top: 20px;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.resultado strong {
+    color: #1f3c88;
+}
