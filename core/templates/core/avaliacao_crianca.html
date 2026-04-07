@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<h2>Avaliacao - Criança</h2>
+
+{% for avaliacao in avaliacoes %}
+
+    <div class="card">
+
+        <h3>{{ avaliacao.aluno.nome }}</h3>
+        <p><strong>Flexões:</strong> {{ avaliacao.flexoes }}</p>
+        <p><strong>Abdominais:</strong> {{ avaliacao.abdominais }}</p>
+        <p><strong>Corrida (tempo):</strong> {{ avaliacao.corrida_tempo }}s</p>
+        <p><strong>Nível motor:</strong> {{ avaliacao.nivel_motor }}</p>
+
+    </div>
+{% empty %}
+    <p>Nenhuma avaliação cadastrada</p>
+{% endfor %}
+
+{% endblock %}
+        

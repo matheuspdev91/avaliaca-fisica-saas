@@ -1,0 +1,56 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<h2>Avaliação Criança</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="card">
+        <h3>Dados Pessoais</h3>
+
+        {{ avaliacao_form.nome.label_tag }}
+        {{ avaliacao_form.nome }}
+
+        {{ avaliacao_form.sexo.label_tag }}
+        {{ avaliacao_form.sexo }}
+
+        {{ avaliacao_form.data_nascimento.label_tag }}
+        {{ avaliacao_form.data_nascimento }}
+
+        {{ avaliacao_form.altura.label_tag }}
+        {{ avaliacao_form.altura }}
+
+        {{ avaliacao_form.peso.label_tag }}
+        {{ avaliacao_form.peso }}
+    
+    </div>
+
+        <!--TESTE-->
+        
+        <div class="card">
+            <h3>TESTE</h3>
+            
+            {{ form.coordenacao.label_tag }}
+            {{ form.coordenacao}}
+            
+            {{ form.equilibrio.label_tag }}
+            {{ form.equilibrio }}
+
+            {{ form.flexoes.label_tag }}
+            {{ form.flexoes }}
+
+            {{ form.agilidade_tempo.label_tag }}
+            {{ form.agilidade_tempo }}
+
+            {{ form.salto_horizontal.label_tag }}
+            {{ form.salto_horizontal }}
+            
+    </div>
+
+    <button type="submit">Salvar</button>
+</form>
+
+
+{% endblock %}

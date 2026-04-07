@@ -79,17 +79,14 @@ WSGI_APPLICATION = 'projeto.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-import dj_database_url
-import os
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{str(BASE_DIR / 'db.sqlite3')}',
-        conn_max_age=600,
-        ssl_require=False
-        
-    )
+    'default':{
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3'
+    }
 }
+    
 
 
 
@@ -127,23 +124,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-import os
-import ssl
-import certifi
 
-ssl_conext = ssl.create_default_context(cafile=certifi.where())
 
+
+# Static files (CSS, JavaScript, Images)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
+# Adicione isto:
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 
-LOGIN_REDIRECT_URL = 'avaliacoes'
-LOGIN_URL = 'login'
-LOGOUT_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = 'core:avaliacoes'
+LOGIN_URL = 'core:login'
+LOGOUT_REDIRECT_URL = 'core:login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# EMAIL (corrigido)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 465
@@ -153,6 +153,8 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
 
-DEFAULT_FROM_MAIL ='mpdev34@gmail.com'
+DEFAULT_FROM_EMAIL = 'mpdev34@gmail.com'  # 🔥 corrigido
 AUTH_USER_MODEL = 'core.Usuario'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

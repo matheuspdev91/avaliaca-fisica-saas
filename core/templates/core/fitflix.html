@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitFlix</title>
+    <link rel="stylesheet" href="{% static 'css/fitflix.css' %}">
+</head>
+<body>
+
+<div class="header">
+    <h1>FitFlix</h1>
+    <a href="{% url 'core:criar_exercicio' %}" class="btn-novo">+ Novo Exercicio</a>
+</div>
+
+<div class="categories">
+    {% for grupo in grupos %}
+    <div class="category">
+        <div class="category-header" onclick="toggleCategory(this)">
+            <h2>{{ grupo.nome }}</h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="category-content">
+            <div class="exercises-grid">
+                {% for exercicio in grupo.exercicios %}
+                    <div class="exercise-card" onclick="openModal('modal-{{ exercicio.id }}')">
+                        {% if exercicio.variacoes.count > 0 %}
+                            <span class="badge">{{ exercicio.variacoes.count }} variacao{{ exercicio.variacoes.count|pluralize:"es" }}</span>
+                        {% endif %}
+                        <div class="img-container">
+                            {% if exercicio.imagem %}
+                                <img src="{{ exercicio.imagem.url }}" alt="{{ exercicio.nome }}">
+                            {% else %}
+                                <span class="sem-imagem">Sem imagem</span>
+                            {% endif %}
+                        </div>
+                        <div class="info">
+                            <h3>{{ exercicio.nome }}</h3>
+                            <p>Clique para ver variacoes</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="sem-exercicios">Nenhum exercicio cadastrado</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% for exercicio in todos_exercicios %}
+<div id="modal-{{ exercicio.id }}" class="modal" onclick="closeModal(event, 'modal-{{ exercicio.id }}')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2>{{ exercicio.nome }}</h2>
+            <button class="btn-close" onclick="closeModal(event, 'modal-{{ exercicio.id }}')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="exercise-detail">
+                {% if exercicio.imagem %}
+                    <img src="{{ exercicio.imagem.url }}" alt="{{ exercicio.nome }}">
+                {% endif %}
+                <div class="exercise-detail-text">
+                    <h3>{{ exercicio.grupo_muscular|title }}</h3>
+                    <p>{{ exercicio.descricao|default:"Sem descricao disponivel." }}</p>
+                </div>
+            </div>
+            <h3 class="variations-title">Variacoes disponiveis:</h3>
+            {% if exercicio.variacoes.count > 0 %}
+                <div class="variations-grid">
+                    {% for variacao in exercicio.variacoes.all %}
+                        <div class="variation-item" onclick="toggleGif(this)">
+                            <div class="gif-box">
+                                {% if variacao.gif %}
+                                    <img src="{{ variacao.gif.url }}" alt="{{ variacao.nome }}">
+                                    <span class="play-btn">▶</span>
+                                {% else %}
+                                    <span class="sem-gif">Sem GIF</span>
+                                {% endif %}
+                            </div>
+                            <div class="info">
+                                <h4>{{ variacao.nome }}</h4>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="sem-variacoes">Nenhuma variacao cadastrada.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+function toggleCategory(header) {
+    header.classList.toggle('active');
+    header.nextElementSibling.classList.toggle('active');
+}
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeModal(e, id) {
+    if (e.target.classList.contains('modal') || e.target.classList.contains('btn-close')) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+function toggleGif(el) {
+    const img = el.querySelector('img');
+    const btn = el.querySelector('.play-btn');
+    if (img) {
+        img.classList.toggle('active');
+        btn.style.display = img.classList.contains('active') ? 'none' : 'block';
+    }
+}
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+        document.body.style.overflow = 'auto';
+    }
+});
+</script>
+
+</body>
+</html>

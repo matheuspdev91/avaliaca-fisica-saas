@@ -7,9 +7,9 @@
 <div class="dashboard-container">
     <div class="modelo-3d">
         {% if avaliacao.sexo == 'M' %}
-            <img src="{% static 'img/masculino.png' %}" alt="Modelo masculino">
+            <img src="{% static 'img/masculino.png' %}" class="modelo-img" alt="Modelo masculino">
         {% elif avaliacao.sexo == 'F' %}
-            <img src="{% static 'img/feminino.png' %}" alt="Modelo feminino">
+            <img src="{% static 'img/feminino.png' %}" class="modelo-img" alt="Modelo feminino"
         {% endif %}
     </div>
 
@@ -24,15 +24,15 @@
 
             <!-- Dados para debug (pode remover depois) -->
             <div style="margin-top: 20px; text-align: center;">
-                <p><strong>Percentual:</strong> {{ avaliacao.percentual|default:"0" }}%</p>
-                <p><strong>Massa gorda:</strong> {{ avaliacao.massa_gorda|default:"0" }} kg</p>
-                <p><strong>Massa magra:</strong> {{ avaliacao.massa_magra|default:"0" }} kg</p>
-                <p><strong>Massa residual:</strong> {{ avaliacao.massa_residual|default:"0" }} kg</p>
+                <p><strong>Percentual:</strong> {{ composicao.percentual|default:"0" }}%</p>
+                <p><strong>Massa gorda:</strong> {{ composicao.massa_gorda|default:"0" }}kg</p>
+                <p><strong>Massa magra:</strong> {{ composicao.massa_magra|default:"0" }}kg</p>
+                <p><strong>Massa residual:</strong> {{ composicao.massa_residual|default:"0" }}kg</p>
             </div>
         </div>
     </div>
 
-    <a href="{% url 'detalhe_avaliacao' avaliacao.id %}" class="btn">Voltar</a>
+    <a href="{% url 'core:detalhe_avaliacao' avaliacao.id %}" class="btn">Voltar</a>
 </div>
 {% endblock %}
 
@@ -54,9 +54,9 @@
         }
 
         // ✅ Pega dados do Django com segurança (filtros default)
-        const massaGorda = parseFloat('{{ avaliacao.massa_gorda|default:"0" }}') || 0;
-        const massaMagra = parseFloat('{{ avaliacao.massa_magra|default:"0" }}') || 0;
-        const massaResidual = parseFloat('{{ avaliacao.massa_residual|default:"0" }}') || 0;
+                const massaGorda = parseFloat('{{ composicao.massa_gorda|default:"0" }}') || 0;
+                const massaMagra = parseFloat('{{ composicao.massa_magra|default:"0" }}') || 0;
+                const massaResidual = parseFloat('{{ composicao.massa_residual|default:"0" }}') || 0;
         
         // ✅ Debug no console (F12 > Console)
         console.log('Dados do gráfico:', {
@@ -66,7 +66,7 @@
         });
 
         // ✅ Verifica se há dados
-        if (massaGorda === 0 && massaMagra === 0) {
+        if (massaGorda == 0 && massaMagra == 0) {
             console.warn('Atenção: Sem dados para o gráfico!');
             ctx.parentElement.innerHTML = '<p style="color: red;">Dados não disponíveis</p>';
             return;

@@ -10,8 +10,8 @@
         {% csrf_token %}
 
         <div>
-            <label>Usuário</label><br>
-            <input type="text" name="username" required>
+            <label>Email</label>
+            <input type="email" name="username" required>
         </div>
         
         <br>
@@ -28,7 +28,7 @@
     </form>
 
     <p style="margin-top: 15px; text-align: center;">
-        <a href="{% url 'password_reset' %}">
+        <a href="{% url 'core:password_reset' %}">
             Esqueci minha senha
         </a>
     </p>

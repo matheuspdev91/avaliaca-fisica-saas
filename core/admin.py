@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import AvaliacaoFisica
+from .models import VideoExercicio, VariacaoExercicio, Treino, ExercicioTreino
 
 
 class AvaliacaoFisicaAdmin(admin.ModelAdmin):
@@ -53,4 +54,18 @@ fieldsets = (
 )
 admin.site.register(AvaliacaoFisica, AvaliacaoFisicaAdmin)
 
+class VariacaoInline(admin.TabularInline):
+    model = VariacaoExercicio
+    extra = 1
 
+@admin.register(VideoExercicio)
+class VideoExercicioAdmin(admin.ModelAdmin):
+    inlines = [VariacaoInline]
+
+class ExercicioTreinoInline(admin.TabularInline):
+    model = ExercicioTreino
+    extra = 1
+
+@admin.register(Treino)
+class TreinoAdmin(admin.ModelAdmin):
+    inlines = [ExercicioTreinoInline]

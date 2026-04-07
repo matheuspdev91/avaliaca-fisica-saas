@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div class="fitflix-header-page">
+    <h1>Nova Avaliação</h1>
+    <p>Escolha o tipo de avaliação que deseja realizar</p>
+</div>
+
+<div class="fitflix-choices">
+    <a href="{% url 'core:criar_avaliacao' %}" class="fitflix-choice-card">
+        <span class="fitflix-choice-emoji">🧑</span>
+        <h3>Adulto</h3>
+        <p>Avaliação completa</p>
+        <span class="fitflix-choice-tag">Protocolo completo</span>
+    </a>
+
+    <a href="{% url 'core:criar_avaliacao_idoso' %}" class="fitflix-choice-card">
+        <span class="fitflix-choice-emoji">👴</span>
+        <h3>Idoso</h3>
+        <p>Testes funcionais</p>
+        <span class="fitflix-choice-tag">TUG, Equilíbrio</span>
+    </a>
+
+    <a href="{% url 'core:criar_avaliacao_crianca' %}" class="fitflix-choice-card">
+        <span class="fitflix-choice-emoji">🧒</span>
+        <h3>Criança</h3>
+        <p>Avaliação infantil</p>
+        <span class="fitflix-choice-tag">Coordenação motora</span>
+    </a>
+</div>
+
+{% endblock %}

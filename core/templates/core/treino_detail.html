@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Treino</title>
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<h1>{{ treino.nome }}</h1>
+
+<div class="fitflix">
+    <div class="grid">
+
+        {% for item in itens %}
+        <div class="card">
+
+            <img 
+                src="{{ item.variacao.gif.url }}"
+                data-gif="{{ item.variacao.gif.url }}"
+                class="exercise-img"
+            />
+
+            <h3>{{ item.exercicio.nome }}</h3>
+            <p>{{ item.variacao.nome }}</p>
+
+            <p>Séries: {{ item.series }}</p>
+            <p>Reps: {{ item.repeticoes }}</p>
+            <p>Descanso: {{ item.descanso }}</p>
+            <p>Carga: {{ item.carga }}</p>
+
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,29 +1,37 @@
 {% extends "core/base.html" %}
+
 {% block content %}
 
-<section class="container">
+<div class="fitflix-header-page">
     <h1>Avaliações</h1>
-    
-    <div style="margin: 20px 0;">
-        <a href="{% url 'criar_avaliacao' %}" class="btn btn-primary">
-            Nova Avaliação
-        </a>
-    </div>
+    <p>Gerencie todas as avaliações dos seus alunos</p>
+</div>
 
-    <ul>
+<a href="{% url 'core:criar_avaliacao' %}" class="btn" style="margin-bottom: 25px;">
+    + Nova Avaliação
+</a>
+
+{% if avaliacoes %}
+    <div class="fitflix-exercises-grid">
         {% for avaliacao in avaliacoes %}
-        <li>
-            <strong>{{ avaliacao.nome }}</strong> -
-            {{ avaliacao.criado_em|date:"d/m/Y" }}
-
-            <a href="{% url 'detalhe_avaliacao' avaliacao.id %}">
-                Visualizar
-            </a>
-        </li>
-        {% empty %}
-        <p>Você ainda não possui avaliação</p>
+        <div class="fitflix-exercise-card">
+            <div class="fitflix-exercise-info">
+                <h3>{{ avaliacao.nome }}</h3>
+                <p style="color: var(--dark-text-muted); margin-bottom: 15px;">
+                    {{ avaliacao.criado_em|date:"d/m/Y" }}
+                </p>
+                <a href="{% url 'core:detalhe_avaliacao' avaliacao.id %}" class="btn" style="width: 100%; text-align: center;">
+                    Visualizar
+                </a>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
-</section>
+    </div>
+{% else %}
+    <div class="card" style="text-align: center; padding: 60px 20px;">
+        <p style="font-size: 1.2rem; margin-bottom: 20px;">Você ainda não possui avaliações</p>
+        <a href="{% url 'core:criar_avaliacao' %}" class="btn">Criar primeira avaliação</a>
+    </div>
+{% endif %}
 
 {% endblock %}

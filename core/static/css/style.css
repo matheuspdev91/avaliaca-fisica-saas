@@ -1,0 +1,721 @@
+/* ============================================
+   RESET E TEMA ESCURO GLOBAL
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background: #0b0f0d !important;
+    color: #ffffff !important;
+}
+
+body > div,
+body > main,
+body > section,
+.fitflix-layout,
+.main,
+.content {
+    background: #0b0f0d !important;
+    color: #ffffff !important;
+    min-height: 100vh;
+}
+
+body * {
+    background-color: transparent;
+}
+
+/* ============================================
+   FITFLIX LAYOUT
+   ============================================ */
+
+.fitflix-layout {
+    display: flex;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #0b0f0d 0%, #050807 100%) !important;
+}
+
+/* SIDEBAR */
+.fitflix-sidebar {
+    width: 250px;
+    background: rgba(0, 0, 0, 0.9) !important;
+    backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 25px 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+}
+
+.fitflix-logo {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fitflix-logo a {
+    text-decoration: none;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.fitflix-logo .flix {
+    color: #22c55e;
+}
+
+/* Navegação */
+.fitflix-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.fitflix-nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fitflix-nav-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    margin-bottom: 5px;
+    padding-left: 15px;
+}
+
+.fitflix-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    color: #94a3b8;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.fitflix-nav-link svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    stroke: currentColor;
+}
+
+.fitflix-nav-link:hover,
+.fitflix-nav-link.active {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+}
+
+.fitflix-nav-link.active {
+    background: rgba(34, 197, 94, 0.25);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+}
+
+.fitflix-nav-logout:hover {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+}
+
+/* Usuário */
+.fitflix-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto;
+}
+
+.fitflix-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #22c55e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    font-size: 1.1rem;
+}
+
+.fitflix-user-name {
+    font-size: 0.9rem;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* CONTEÚDO PRINCIPAL */
+.fitflix-main {
+    margin-left: 250px;
+    flex: 1;
+    padding: 40px;
+    background: #0b0f0d !important;
+    min-height: 100vh;
+}
+
+/* HEADER DA PÁGINA */
+.fitflix-header-page {
+    margin-bottom: 30px;
+}
+
+.fitflix-header-page h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.fitflix-header-page h1::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    margin-top: 10px;
+    border-radius: 2px;
+}
+
+.fitflix-header-page p {
+    color: #64748b;
+    font-size: 1rem;
+}
+
+/* BOTÕES */
+.btn, button {
+    display: inline-block;
+    background: #22c55e !important;
+    color: white !important;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover, button:hover {
+    background: #16a34a !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);
+}
+
+.btn-excluir {
+    background: #ef4444 !important;
+}
+
+.btn-excluir:hover {
+    background: #dc2626 !important;
+    box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+}
+
+/* ============================================
+   FITFLIX CATEGORIAS
+   ============================================ */
+
+.fitflix-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.fitflix-category {
+    background: linear-gradient(145deg, #121815 0%, #0d120f 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.fitflix-category-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 25px;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    user-select: none;
+    position: relative;
+}
+
+.fitflix-category-header:hover {
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.fitflix-category-icon {
+    font-size: 1.5rem;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.fitflix-category-header h2 {
+    flex: 1;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.fitflix-category-arrow {
+    width: 24px;
+    height: 24px;
+    color: #64748b;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.fitflix-category.active .fitflix-category-arrow {
+    transform: rotate(180deg);
+    color: #22c55e;
+}
+
+.fitflix-category-content {
+    display: none;
+    
+}
+
+.fitflix-category.active .fitflix-category-content {
+    display: block;
+
+}
+
+/* ============================================
+   GRID E CARDS DE EXERCÍCIOS
+   ============================================ */
+
+.fitflix-exercises-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.fitflix-exercise-card {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.fitflix-exercise-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* ============================================
+   IMAGENS E PLAY/PAUSE - VERSÃO FINAL CORRIGIDA
+   ============================================ */
+
+.fitflix-exercise-image {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a1f1c 0%, #121815 100%);
+}
+
+/* Thumbnail - visível por padrão */
+.fitflix-exercise-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+}
+
+/* GIF - COMEÇA ESCONDIDO (JS controla) */
+.fitflix-exercise-gif {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* GIF ativo - quando JS adiciona classe */
+.fitflix-exercise-gif.js-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Play button - SEMPRE visível */
+.fitflix-exercise-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(34, 197, 94, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+    transition: all 0.3s ease;
+    opacity: 1;
+}
+
+/* Play escondido quando GIF está ativo */
+.fitflix-exercise-play.js-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.fitflix-play-icon {
+    width: 0;
+    height: 0;
+    border-left: 16px solid white;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    margin-left: 4px;
+}
+
+/* REMOVIDO: Hover que quebrava o JS */
+/* NÃO use .fitflix-exercise-card:hover .fitflix-exercise-gif */
+
+/* Info do exercício */
+.fitflix-exercise-info {
+    padding: 18px;
+}
+
+.fitflix-exercise-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.fitflix-exercise-tag {
+    display: inline-block;
+    padding: 5px 12px;
+    background: rgba(34, 197, 94, 0.15);
+    border-radius: 15px;
+    font-size: 0.75rem;
+    color: #4ade80;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+/* ============================================
+   BUSCA
+   ============================================ */
+
+.fitflix-search-bar {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.fitflix-search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fitflix-search-bar input {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #ffffff !important;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.fitflix-search-bar input:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.fitflix-search-bar input::placeholder {
+    color: #64748b;
+}
+
+/* ============================================
+   CARDS DE ESCOLHA (Adulto, Idoso, Criança)
+   ============================================ */
+
+.fitflix-choices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.fitflix-choice-card {
+    background: linear-gradient(145deg, #121815 0%, #0d120f 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 35px 30px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.fitflix-choice-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.fitflix-choice-card:hover::before {
+    opacity: 1;
+}
+
+.fitflix-choice-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.fitflix-choice-emoji {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.fitflix-choice-card:hover .fitflix-choice-emoji {
+    transform: scale(1.1);
+}
+
+.fitflix-choice-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.fitflix-choice-card p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.fitflix-choice-tag {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 6px 16px;
+    background: rgba(34, 197, 94, 0.15);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #4ade80;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+/* ============================================
+   CORREÇÃO DE IMAGENS GIGANTES
+   ============================================ */
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.modelo-3d img,
+.modelo-img {
+    max-width: 300px !important;
+    max-height: 400px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain;
+}
+
+.dashboard-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.modelo-3d {
+    flex: 0 0 auto;
+    max-width: 300px;
+}
+
+.grafico-area {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* ============================================
+   FORMULÁRIOS
+   ============================================ */
+
+input, select, textarea {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff !important;
+    padding: 12px 15px;
+    border-radius: 10px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+.fitflix-footer {
+    margin-left: 250px;
+    padding: 20px 40px;
+    color: #64748b;
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: #0b0f0d;
+}
+
+/* ============================================
+   RESPONSIVO
+   ============================================ */
+
+@media (max-width: 768px) {
+    .fitflix-sidebar {
+        width: 70px;
+        padding: 20px 10px;
+    }
+    
+    .fitflix-sidebar .fitflix-nav-link span,
+    .fitflix-sidebar .fitflix-nav-title,
+    .fitflix-sidebar .fitflix-user-name,
+    .fitflix-logo .flix {
+        display: none;
+    }
+    
+    .fitflix-logo {
+        text-align: center;
+    }
+    
+    .fitflix-logo a {
+        font-size: 1.2rem;
+    }
+    
+    .fitflix-main {
+        margin-left: 70px;
+        padding: 20px;
+    }
+    
+    .fitflix-footer {
+        margin-left: 70px;
+        padding: 20px;
+    }
+    
+    .fitflix-exercises-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================
+   MENSAGENS E UTILITÁRIOS
+   ============================================ */
+
+.fitflix-empty {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+    font-style: italic;
+    grid-column: 1 / -1;
+}
+
+/* Cards genéricos */
+.card {
+    background: linear-gradient(145deg, #121815 0%, #0d120f 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card h2, .card h3 {
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.card p {
+    color: #94a3b8;
+    margin-bottom: 10px;
+}
+
+.card strong {
+    color: #4ade80;
+}
+
+.fitflix-exercise-thumb.js-hidden {
+    opacity: 0;
+}

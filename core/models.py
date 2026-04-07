@@ -4,6 +4,9 @@ from datetime import date
 from django.contrib.auth.models import AbstractUser
 
 
+# ========================
+# USUÁRIO
+# ========================
 class Usuario(AbstractUser):
     email = models.EmailField(unique=True)
     cref = models.CharField(max_length=20)
@@ -13,6 +16,9 @@ class Usuario(AbstractUser):
     REQUIRED_FIELDS = ['username']
 
 
+# ========================
+# AVALIAÇÃO BASE (ADULTO)
+# ========================
 class AvaliacaoFisica(models.Model):
     SEXO_CHOICES = (
         ('M', 'Masculino'),
@@ -21,16 +27,18 @@ class AvaliacaoFisica(models.Model):
 
     data = models.DateTimeField(auto_now_add=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
     nome = models.CharField(max_length=100)
     sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
     data_nascimento = models.DateField()
+
     altura = models.DecimalField(max_digits=4, decimal_places=2)
     peso = models.DecimalField(max_digits=5, decimal_places=2)
+
     objetivo = models.TextField(blank=True)
+    percentual_gordura = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
     criado_em = models.DateTimeField(auto_now_add=True)
-    percentual_gordura = models.DecimalField(
-        max_digits=5, decimal_places=2, null=True, blank=True
-    )
 
     def __str__(self):
         return f"{self.nome} - {self.criado_em.strftime('%d/%m/%Y')}"
@@ -43,99 +51,49 @@ class AvaliacaoFisica(models.Model):
         )
 
     @property
-    def percentual(self):
+    def imc(self):
         try:
-            adip = self.adipometria
-
-            soma = (
-                float(adip.peito or 0) +
-                float(adip.axilar_media or 0) +
-                float(adip.triciptal or 0) +
-                float(adip.subescapular or 0) +
-                float(adip.abdominal or 0) +
-                float(adip.supra_iliaca or 0) +
-                float(adip.coxa or 0)
-            )
-
-            idade = self.idade
-
-            if self.sexo == 'M':
-                densidade = (
-                    1.112
-                    - (0.00043499 * soma)
-                    + (0.00000055 * soma ** 2)
-                    - (0.00028826 * idade)
-                )
-            else:
-                densidade = (
-                    1.097
-                    - (0.00046971 * soma)
-                    + (0.00000056 * soma ** 2)
-                    - (0.00012828 * idade)
-                )
-
-            gordura = ((4.95 / densidade) - 4.50) * 100
-            return round(gordura, 2)
-
-        except Exception:
+            return round(float(self.peso) / (float(self.altura) ** 2), 2)
+        except:
             return None
 
-    # 🔥 AGORA CORRETAMENTE DENTRO DA CLASSE
-    
-    @property
-    def massa_gorda(self):
-        percentual = self.percentual
-        if percentual is not None:
-            return round(float(self.peso) * (percentual / 100), 2)
-        return None
 
-    @property
-    def massa_magra(self):
-        mg = self.massa_gorda
-        if mg is not None:
-            return round(float(self.peso) - mg, 2)
-        return None
-
-
-    @property
-    def massa_residual(self):
-        if self.sexo == 'F':
-            return round(float(self.peso) * 0.241,2)
-        else:
-            return round(float(self.peso) * 0.269,2)
-
-
+# ========================
+# CIRCUNFERÊNCIAS
+# ========================
 class Circunferencia(models.Model):
     avaliacao = models.OneToOneField(
         AvaliacaoFisica,
         on_delete=models.CASCADE,
         related_name='circunferencias'
     )
-
     ombros = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     torax = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     cintura = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     abdome = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     quadril = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
     braco_direito = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     braco_esquerdo = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
     coxa_direita = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     coxa_esquerda = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
     panturrilha_direita = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     panturrilha_esquerda = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
-    def __str__(self):
-        return f'Circunferências - Avaliação {self.avaliacao.id}'
 
-
+# ========================
+# ADIPOMETRIA
+# ========================
 class Adipometria(models.Model):
     avaliacao = models.OneToOneField(
-        AvaliacaoFisica,
+        'AvaliacaoFisica',
         on_delete=models.CASCADE,
         related_name='adipometria'
     )
 
-    triciptal = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    tricipital = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     subescapular = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     supra_iliaca = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     abdominal = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
@@ -145,3 +103,183 @@ class Adipometria(models.Model):
 
     def __str__(self):
         return f'Adipometria - Avaliação {self.avaliacao.id}'
+
+
+# ========================
+# CRIANÇA
+# ========================
+class AvaliacaoCrianca(models.Model):
+    avaliacao = models.OneToOneField(
+        AvaliacaoFisica,
+        on_delete=models.CASCADE,
+        related_name='crianca'
+    )
+
+    coordenacao = models.CharField(max_length=20)
+    equilibrio_segundos = models.FloatField()
+    flexoes = models.IntegerField()
+    agilidade_tempo = models.FloatField()
+    salto_horizontal = models.FloatField(null=True, blank=True)
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Criança - {self.avaliacao.nome}"
+
+    @property
+    def imc(self):
+        return self.avaliacao.imc
+
+    @property
+    def classificacao_imc(self):
+        imc = self.imc
+        if imc is None:
+            return None
+        if imc < 14:
+            return "Baixo peso"
+        elif imc < 18:
+            return "Normal"
+        elif imc < 22:
+            return "Sobrepeso"
+        return "Obesidade"
+
+    @property
+    def classificacao_altura(self):
+        altura = float(self.avaliacao.altura)
+        idade = self.avaliacao.idade
+        if idade < 10 and altura < 1.2:
+            return "Baixa estatura"
+        return "Adequado"
+
+    @property
+    def nivel_motor(self):
+        if self.flexoes < 5:
+            return 'Baixo'
+        elif self.flexoes < 10:
+            return 'Moderado'
+        return 'Bom'
+
+
+# ========================
+# IDOSO
+# ========================
+class AvaliacaoIdoso(models.Model):
+    avaliacao = models.OneToOneField(
+        AvaliacaoFisica,
+        on_delete=models.CASCADE,
+        related_name='idoso'
+    )
+
+    sentar_levantar = models.IntegerField()
+    tug_tempo = models.FloatField()
+    equilibrio_segundos = models.FloatField()
+    caminhada_6min = models.IntegerField()
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Idoso - {self.avaliacao.nome}"
+
+    @property
+    def panturrilha_media(self):
+        try:
+            circ = self.avaliacao.circunferencias
+            valores = [
+                circ.panturrilha_direita,
+                circ.panturrilha_esquerda
+            ]
+            valores_validos = [float(v) for v in valores if v]
+            if not valores_validos:
+                return None
+            return round(sum(valores_validos) / len(valores_validos), 2)
+        except:
+            return None
+
+    @property
+    def diagnostico_sarcopenia(self):
+        pant = self.panturrilha_media
+        if pant is None:
+            return 'Sem dados'
+        if pant < 31:
+            return 'Risco de sarcopenia'
+        return 'Normal'
+
+    @property
+    def classificacao_risco_queda(self):
+        if self.tug_tempo > 12:
+            return "Alto"
+        elif self.tug_tempo > 9:
+            return "Moderado"
+        return "Baixo"
+
+    @property
+    def diagnostico_funcional(self):
+        if self.diagnostico_sarcopenia == 'Risco de sarcopenia' or self.tug_tempo > 12:
+            return "Alto risco funcional"
+        elif self.tug_tempo > 9:
+            return "Risco moderado"
+        return "Baixo risco"
+
+
+# ========================
+# FIT FLIX
+# ========================
+class VideoExercicio(models.Model):
+    nome = models.CharField(max_length=100)
+    grupo_muscular = models.CharField(max_length=50)
+    imagem = models.ImageField(upload_to='exercicios/imagem/', null=True, blank=True)
+    descricao = models.TextField(blank=True)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nome
+
+
+class VariacaoExercicio(models.Model):
+    exercicio = models.ForeignKey(
+        VideoExercicio,
+        on_delete=models.CASCADE,
+        related_name='variacoes'
+    )
+    nome = models.CharField(max_length=100)
+    gif = models.ImageField(upload_to='exercicios/gif/')
+    grupo_muscular = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return f"{self.exercicio.nome} - {self.nome}"
+
+
+class Aluno(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=100)
+    data_nascimento = models.DateField()
+
+    def __str__(self):
+        return self.nome
+
+
+class Treino(models.Model):
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=100)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.nome} - {self.aluno.nome}"
+
+
+class ExercicioTreino(models.Model):
+    treino = models.ForeignKey(Treino, on_delete=models.CASCADE, related_name='exercicios')
+    exercicio = models.ForeignKey(VideoExercicio, on_delete=models.CASCADE)
+    variacao = models.ForeignKey(VariacaoExercicio, on_delete=models.CASCADE)
+    series = models.IntegerField()
+    repeticoes = models.IntegerField()
+    descanso = models.IntegerField(help_text='em segundos')
+    carga = models.CharField(max_length=50, blank=True)
+    ordem = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.treino.nome} - {self.exercicio.nome}"
