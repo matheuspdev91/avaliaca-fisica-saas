@@ -719,3 +719,10 @@ label {
 .fitflix-exercise-thumb.js-hidden {
     opacity: 0;
 }
+
+/* LOGO */
+
+.logo {
+    text-decoration: none;
+    color: inherit;
+}
