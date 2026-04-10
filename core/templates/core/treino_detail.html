@@ -5,7 +5,7 @@
     <title>Treino</title>
     
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fitflix.css' %}">
 </head>
 
 <body>
@@ -13,26 +13,31 @@
 <h1>{{ treino.nome }}</h1>
 
 <div class="fitflix">
-    <div class="grid">
+    
 
         {% for item in itens %}
-        <div class="card">
 
-            <img 
-                src="{{ item.variacao.gif.url }}"
-                data-gif="{{ item.variacao.gif.url }}"
-                class="exercise-img"
-            />
+        <div class="treino-container">
 
+        <div class="treino-img">
+            <img src="{{ item.variacao.gif.url }}" />
+            </div>
+
+
+        <div class="treino-info">
             <h3>{{ item.exercicio.nome }}</h3>
             <p>{{ item.variacao.nome }}</p>
 
-            <p>Séries: {{ item.series }}</p>
-            <p>Reps: {{ item.repeticoes }}</p>
-            <p>Descanso: {{ item.descanso }}</p>
-            <p>Carga: {{ item.carga }}</p>
+            <ul>
+                <li><strong>Séries:</strong> {{ item.series }}</li>
+                <li><strong>Repetições:</strong> {{ item.repeticoes }}</li>
+                <li><strong>Descanso:</strong> {{ item.descanso }}</li>
+                <li><strong>Carga:</strong> {{ item.carga }}</li>
 
+            </ul>
         </div>
+           
+    </div>
         {% endfor %}
 
     </div>

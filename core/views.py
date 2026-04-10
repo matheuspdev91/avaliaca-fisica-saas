@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from decimal import Decimal
+from .models import Aluno, Treino
 
 from .models import (
     AvaliacaoFisica, VideoExercicio, VariacaoExercicio,
@@ -503,4 +504,16 @@ def criar_treino(request):
         return redirect('core:editar_treino', treino.id)
     return render(request, 'core/criar_treino.html', {
         'alunos': alunos
+    })
+
+
+#--PAINEL DO ALUNO--
+
+def painel_aluno(request, aluno_id):
+    aluno = get_object_or_404(Aluno, id=aluno_id)
+    treinos = Treino.objects.filter(aluno=aluno)
+
+    return render(request, 'core/painel_aluno.html', {
+        'aluno': aluno,
+        'treinos': treinos
     })
