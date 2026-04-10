@@ -517,3 +517,9 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--verde-escuro);
 }
+
+.btn-novo {
+    background: #22c55e;
+    color: #000;
+    font-weight: bold;
+}

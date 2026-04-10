@@ -481,3 +481,26 @@ def fitflix(request):
         'todos_exercicios': exercicios,
     })
 
+
+    # CRIAR TREINO
+@login_required
+def criar_treino(request):
+    from .models import Aluno, Treino
+
+    alunos = Aluno.objects.filter(usuario=request.user)
+
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        aluno_id = request.POST.get('aluno')
+
+        aluno = Aluno.objects.get(id=aluno_id)
+
+        treino = Treino.objects.create(
+            nome=nome,
+            aluno=aluno 
+        )
+
+        return redirect('core:editar_treino', treino.id)
+    return render(request, 'core/criar_treino.html', {
+        'alunos': alunos
+    })

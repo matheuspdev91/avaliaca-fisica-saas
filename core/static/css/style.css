@@ -726,3 +726,18 @@ label {
     text-decoration: none;
     color: inherit;
 }
+
+
+/* CRIAR TREINO */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.acoes {
+    display: flex;
+    gap: 10px;
+}
+

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <a href="{% url 'core:avaliacoes' %}" class="logo">
     <h1>FitFlix</h1>
+    
 </a>
     <link rel="stylesheet" href="{% static 'css/fitflix.css' %}">
 </head>
@@ -13,9 +14,17 @@
 
 <div class="header">
     <h1>FitFlix</h1>
-    <a href="{% url 'core:criar_exercicio' %}" class="btn-novo">+ Novo Exercicio</a>
-</div>
 
+    <div class="acoes">
+        <a href="{% url 'core:criar_treino' %}" class="btn-novo">
+            + Novo Treino
+        </a>
+
+        <a href="{% url 'core:criar_exercicio' %}" class="btn-novo">
+            + Novo Exercício
+        </a>
+    </div>
+</div>
 <div class="categories">
     {% for grupo in grupos %}
     <div class="category">

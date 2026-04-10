@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import AvaliacaoFisica
 from .models import VideoExercicio, VariacaoExercicio, Treino, ExercicioTreino
-
+from .models import Aluno
 
 class AvaliacaoFisicaAdmin(admin.ModelAdmin):
     list_display = (
@@ -69,3 +69,5 @@ class ExercicioTreinoInline(admin.TabularInline):
 @admin.register(Treino)
 class TreinoAdmin(admin.ModelAdmin):
     inlines = [ExercicioTreinoInline]
+
+admin.site.register(Aluno)
