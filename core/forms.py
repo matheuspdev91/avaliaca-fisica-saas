@@ -73,11 +73,11 @@ class CriarTreinoForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        usuario = kwargs.pop('usuario', None)
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
-        if usuario is not None:
-            self.fields['aluno'].queryset = Aluno.objects.filter(usuario=usuario).order_by('nome')
+        if user is not None:
+            self.fields['aluno'].queryset = Aluno.objects.filter(user=user).order_by('nome')
 
 
 class ExercicioTreinoForm(forms.ModelForm):

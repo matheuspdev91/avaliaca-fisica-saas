@@ -41,7 +41,7 @@ def login_view(request):
     if request.method == 'GET':
         return render(request, 'core/login.html')
 
-    email = request.POST.get("username")
+    email = request.POST.get("email").strip().lower()
     password = request.POST.get("password")
 
     user = authenticate(request, username=email, password=password)
@@ -52,7 +52,6 @@ def login_view(request):
 
     messages.error(request, 'Email ou senha invalidos')
     return render(request, 'core/login.html')
-
 
 # =========================
 # LOGOUT
@@ -383,7 +382,7 @@ def editar_treino(request, treino_id):
     treino = get_object_or_404(
         Treino.objects.select_related('aluno'),
         id=treino_id,
-        aluno__usuario=request.user,
+        aluno__user=request.user,
     )
 
     if request.method == 'POST':
@@ -543,7 +542,7 @@ def fitflix(request):
 @login_required
 def criar_treino(request):
     if request.method == 'POST':
-        form = CriarTreinoForm(request.POST, usuario=request.user)
+        form = CriarTreinoForm(request.POST, user=request.user)
         if form.is_valid():
             treino = Treino.objects.create(
                 nome=form.cleaned_data['nome'],
@@ -551,7 +550,7 @@ def criar_treino(request):
             )
             return redirect('core:editar_treino', treino.id)
     else:
-        form = CriarTreinoForm(usuario=request.user)
+        form = CriarTreinoForm(user=request.user)
 
     return render(request, 'core/criar_treino.html', {
         'form': form,
@@ -561,6 +560,7 @@ def criar_treino(request):
 
 #--PAINEL DO ALUNO--
 
+@login_required
 def painel_aluno(request, aluno_id):
     aluno = get_object_or_404(Aluno, id=aluno_id)
     treinos = Treino.objects.filter(aluno=aluno)
