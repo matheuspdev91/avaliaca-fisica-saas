@@ -46,6 +46,7 @@ urlpatterns = [
 
     # Treinos
     path('treino/<int:treino_id>/', views.treino_detail, name='treino_detail'),
+    path('treino/<int:treino_id>/editar/', views.editar_treino, name='editar_treino'),
     path('treino/novo/', views.criar_treino, name='criar_treino'),
     path('aluno/<int:aluno_id>/', views.painel_aluno, name='painel_aluno')
 ]

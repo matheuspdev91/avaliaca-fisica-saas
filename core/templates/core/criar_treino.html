@@ -1,21 +1,192 @@
 {% extends 'core/base.html' %}
 
+{% block title %}
+    {% if modo_edicao %}Editar Treino{% else %}Criar Treino{% endif %}
+{% endblock %}
+
 {% block content %}
+<div class="fitflix-header-page">
+    <h1>{% if modo_edicao %}Editar treino{% else %}Criar treino{% endif %}</h1>
+    <p>
+        {% if modo_edicao %}
+            Atualize o nome do treino e gerencie os exercícios vinculados.
+        {% else %}
+            Crie o treino e, em seguida, adicione os exercícios na próxima etapa.
+        {% endif %}
+    </p>
+</div>
 
-<h1>Criar Treino</h1>
+<div class="card treino-editor">
+    <form method="post" novalidate>
+        {% csrf_token %}
 
-<form method="POST">
-    {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="form-errors">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
 
-    <input type="text" name="nome" placeholder="Nome do treino">
+        <div class="treino-editor-grid">
+            {% for field in form %}
+                <div class="treino-field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="field-errors">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
 
-    <select name="aluno">
-        {% for aluno in alunos %}
-            <option value="{{ aluno.id }}">{{ aluno.nome }}</option>
-        {% endfor %}
-    </select>
+        {% if modo_edicao %}
+            <div class="treino-editor-topbar">
+                <h2>Exercícios do treino</h2>
+                <button type="button" class="btn" id="add-exercicio">Adicionar exercício</button>
+            </div>
 
-    <button type="submit">Criar</button>
-</form>
+            {{ formset.management_form }}
 
+            {% if formset.non_form_errors %}
+                <div class="form-errors">
+                    {{ formset.non_form_errors }}
+                </div>
+            {% endif %}
+
+            <div id="exercicios-formset" class="treino-formset">
+                {% for exercicio_form in formset %}
+                    <div class="treino-exercicio-card" data-form-index="{{ forloop.counter0 }}">
+                        {% for hidden in exercicio_form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+
+                        <div class="treino-exercicio-header">
+                            <h3>Exercício {{ forloop.counter }}</h3>
+                            <button type="button" class="btn btn-excluir btn-remover-exercicio">Remover</button>
+                        </div>
+
+                        <div class="treino-editor-grid treino-editor-grid-exercicio">
+                            {% for field in exercicio_form.visible_fields %}
+                                {% if field.name != 'DELETE' %}
+                                    <div class="treino-field">
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="field-errors">{{ field.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="treino-delete-field is-hidden">
+                            {{ exercicio_form.DELETE }}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="fitflix-empty">Nenhum exercício cadastrado para este treino.</p>
+                {% endfor %}
+            </div>
+
+            <template id="empty-form-template">
+                <div class="treino-exercicio-card" data-form-index="__prefix__">
+                    {% for hidden in formset.empty_form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+
+                    <div class="treino-exercicio-header">
+                        <h3>Exercício __number__</h3>
+                        <button type="button" class="btn btn-excluir btn-remover-exercicio">Remover</button>
+                    </div>
+
+                    <div class="treino-editor-grid treino-editor-grid-exercicio">
+                        {% for field in formset.empty_form.visible_fields %}
+                            {% if field.name != 'DELETE' %}
+                                <div class="treino-field">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="treino-delete-field is-hidden">
+                        {{ formset.empty_form.DELETE }}
+                    </div>
+                </div>
+            </template>
+        {% endif %}
+
+        <div class="treino-editor-actions">
+            <button type="submit" class="btn">
+                {% if modo_edicao %}Salvar treino{% else %}Criar e continuar{% endif %}
+            </button>
+
+            {% if modo_edicao %}
+                <a href="{% url 'core:treino_detail' treino.id %}" class="btn btn-secundario">Cancelar</a>
+            {% else %}
+                <a href="{% url 'core:fitflix' %}" class="btn btn-secundario">Voltar</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {% if modo_edicao %}
+    <script>
+        (function () {
+            const addButton = document.getElementById('add-exercicio');
+            const container = document.getElementById('exercicios-formset');
+            const totalForms = document.getElementById('id_exercicios-TOTAL_FORMS');
+            const template = document.getElementById('empty-form-template');
+
+            function updateTitles() {
+                const cards = container.querySelectorAll('.treino-exercicio-card:not(.is-removed)');
+                cards.forEach((card, index) => {
+                    const title = card.querySelector('.treino-exercicio-header h3');
+                    if (title) {
+                        title.textContent = `Exercício ${index + 1}`;
+                    }
+                });
+            }
+
+            function bindRemoveButtons(scope) {
+                const buttons = scope.querySelectorAll('.btn-remover-exercicio');
+                buttons.forEach((button) => {
+                    button.addEventListener('click', function () {
+                        const card = this.closest('.treino-exercicio-card');
+                        const deleteField = card.querySelector('input[type="checkbox"][name$="-DELETE"]');
+
+                        if (deleteField) {
+                            deleteField.checked = true;
+                        }
+
+                        card.classList.add('is-removed');
+                        card.style.display = 'none';
+                        updateTitles();
+                    });
+                });
+            }
+
+            addButton.addEventListener('click', function () {
+                const formIndex = Number(totalForms.value);
+                const html = template.innerHTML
+                    .replaceAll('__prefix__', formIndex)
+                    .replaceAll('__number__', formIndex + 1);
+
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = html.trim();
+                const newForm = wrapper.firstElementChild;
+
+                container.appendChild(newForm);
+                totalForms.value = formIndex + 1;
+                bindRemoveButtons(newForm);
+                updateTitles();
+            });
+
+            bindRemoveButtons(document);
+            updateTitles();
+        })();
+    </script>
+    {% endif %}
 {% endblock %}

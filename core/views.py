@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from decimal import Decimal
 from .models import Aluno, Treino
 
@@ -11,11 +12,14 @@ from .models import (
     AvaliacaoCrianca, AvaliacaoIdoso, Treino
 )
 from .forms import (
+    CriarTreinoForm,
     AvaliacaoFisicaForm,
     CircunferenciaForm,
     AdipometriaForm,
     AvaliacaoCriancaForm,
-    AvaliacaoIdosoForm
+    AvaliacaoIdosoForm,
+    ExercicioTreinoFormSet,
+    TreinoForm,
 )
 
 User = get_user_model()
@@ -374,6 +378,58 @@ def treino_detail(request, treino_id):
     })
 
 
+@login_required
+def editar_treino(request, treino_id):
+    treino = get_object_or_404(
+        Treino.objects.select_related('aluno'),
+        id=treino_id,
+        aluno__usuario=request.user,
+    )
+
+    if request.method == 'POST':
+        form = TreinoForm(request.POST, instance=treino)
+        formset = ExercicioTreinoFormSet(request.POST, instance=treino, prefix='exercicios')
+
+        if form.is_valid() and formset.is_valid():
+            with transaction.atomic():
+                treino = form.save()
+                ordem = 1
+                for exercicio_form in formset.forms:
+                    if not hasattr(exercicio_form, 'cleaned_data') or not exercicio_form.cleaned_data:
+                        continue
+
+                    if exercicio_form.cleaned_data.get('DELETE'):
+                        continue
+
+                    exercicio = exercicio_form.save(commit=False)
+
+                    if not exercicio.exercicio_id or not exercicio.variacao_id:
+                        continue
+
+                    exercicio.treino = treino
+                    exercicio.ordem = ordem
+                    exercicio.save()
+                    ordem += 1
+
+                for exercicio in formset.deleted_objects:
+                    exercicio.delete()
+
+                formset.save_m2m()
+
+            messages.success(request, 'Treino atualizado com sucesso!')
+            return redirect('core:treino_detail', treino_id=treino.id)
+    else:
+        form = TreinoForm(instance=treino)
+        formset = ExercicioTreinoFormSet(instance=treino, prefix='exercicios')
+
+    return render(request, 'core/criar_treino.html', {
+        'form': form,
+        'formset': formset,
+        'treino': treino,
+        'modo_edicao': True,
+    })
+
+
 # ==================
 # CALCULO DE DOBRAS
 # ==================
@@ -486,24 +542,20 @@ def fitflix(request):
     # CRIAR TREINO
 @login_required
 def criar_treino(request):
-    from .models import Aluno, Treino
-
-    alunos = Aluno.objects.filter(usuario=request.user)
-
     if request.method == 'POST':
-        nome = request.POST.get('nome')
-        aluno_id = request.POST.get('aluno')
+        form = CriarTreinoForm(request.POST, usuario=request.user)
+        if form.is_valid():
+            treino = Treino.objects.create(
+                nome=form.cleaned_data['nome'],
+                aluno=form.cleaned_data['aluno'],
+            )
+            return redirect('core:editar_treino', treino.id)
+    else:
+        form = CriarTreinoForm(usuario=request.user)
 
-        aluno = Aluno.objects.get(id=aluno_id)
-
-        treino = Treino.objects.create(
-            nome=nome,
-            aluno=aluno 
-        )
-
-        return redirect('core:editar_treino', treino.id)
     return render(request, 'core/criar_treino.html', {
-        'alunos': alunos
+        'form': form,
+        'modo_edicao': False,
     })
 
 
