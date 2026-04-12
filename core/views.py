@@ -5,7 +5,11 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from decimal import Decimal
+import secrets
+import string
 from .models import Aluno, Treino
+from .email_service import enviar_email_acesso_aluno
+from .decorators import apenas_personal
 
 from .models import (
     AvaliacaoFisica, VideoExercicio, VariacaoExercicio,
@@ -18,6 +22,7 @@ from .forms import (
     AdipometriaForm,
     AvaliacaoCriancaForm,
     AvaliacaoIdosoForm,
+    CriarAlunoForm,
     ExercicioTreinoFormSet,
     TreinoForm,
 )
@@ -30,9 +35,10 @@ User = get_user_model()
 # =========================
 def home(request):
     if request.user.is_authenticated:
+        if hasattr(request.user, 'aluno'):
+            return redirect('core:painel_aluno', aluno_id=request.user.aluno.id)
         return redirect('core:avaliacoes')
     return render(request, 'core/home.html')
-
 
 # =========================
 # LOGIN
@@ -48,8 +54,11 @@ def login_view(request):
 
     if user:
         login(request, user)
-        return redirect('core:avaliacoes')
 
+    if hasattr(user, 'aluno'):
+        return redirect('core:painel_aluno', aluno_id=user.aluno.id)
+    else:
+        return redirect('core:avaliacoes')
     messages.error(request, 'Email ou senha invalidos')
     return render(request, 'core/login.html')
 
@@ -84,6 +93,44 @@ def register_view(request):
         return redirect('core:avaliacoes')
 
     return render(request, 'core/register.html')
+
+
+def gerar_senha_aleatoria(tamanho=8):
+    caracteres = string.ascii_letters + string.digits
+    return ''.join(secrets.choice(caracteres) for _ in range(tamanho))
+
+
+@login_required
+def criar_aluno(request):
+    if request.method == 'POST':
+        form = CriarAlunoForm(request.POST)
+        if form.is_valid():
+            senha = gerar_senha_aleatoria()
+            email = form.cleaned_data['email']
+
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=email,
+                    email=email,
+                    password=senha,
+                )
+
+                aluno = form.save(commit=False)
+                aluno.user = user
+                aluno.save()
+
+                enviar_email_acesso_aluno(
+                    nome=aluno.nome,
+                    email=user.email,
+                    senha=senha,
+                )
+
+            messages.success(request, 'Aluno cadastrado com sucesso! Os dados de acesso foram enviados por email.')
+            return redirect('core:home')
+    else:
+        form = CriarAlunoForm()
+
+    return render(request, 'core/criar_aluno.html', {'form': form})
 
 
 # =========================
@@ -562,6 +609,10 @@ def criar_treino(request):
 
 @login_required
 def painel_aluno(request, aluno_id):
+
+    if not hasattr(request.user, 'aluno') or request.user.aluno.id != aluno_id:
+        return redirect('core:login')
+    
     aluno = get_object_or_404(Aluno, id=aluno_id)
     treinos = Treino.objects.filter(aluno=aluno)
 

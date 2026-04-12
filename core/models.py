@@ -1,8 +1,7 @@
-from django.db import models
-from django.conf import settings
 from datetime import date
-from django.contrib.auth.models import AbstractUser
+
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
@@ -284,6 +283,19 @@ class ExercicioTreino(models.Model):
 class Aluno(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
-    
+    telefone = models.CharField(max_length=20, blank=True)
+    data_nascimento = models.DateField()
+    objetivo = models.CharField(max_length=255, blank=True)
+    observacoes = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.nome
+
+    @property
+    def idade(self):
+        hoje = date.today()
+        return hoje.year - self.data_nascimento.year - (
+            (hoje.month, hoje.day) < (self.data_nascimento.month, self.data_nascimento.day)
+        )
 
 

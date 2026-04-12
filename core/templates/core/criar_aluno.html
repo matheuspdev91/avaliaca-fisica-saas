@@ -1,0 +1,70 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="fitflix-header-page">
+    <h1>Cadastrar aluno</h1>
+    <p>Crie o acesso do aluno e envie as credenciais automaticamente por email.</p>
+</div>
+
+<section class="card" style="max-width: 720px; padding: 24px;">
+    <form method="post" style="display: grid; gap: 18px;">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div style="color: #ffb4b4;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div>
+            <label for="{{ form.nome.id_for_label }}">Nome</label>
+            {{ form.nome }}
+            {% if form.nome.errors %}
+                <div style="color: #ffb4b4;">{{ form.nome.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div style="color: #ffb4b4;">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.telefone.id_for_label }}">Telefone</label>
+            {{ form.telefone }}
+            {% if form.telefone.errors %}
+                <div style="color: #ffb4b4;">{{ form.telefone.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.data_nascimento.id_for_label }}">Data de nascimento</label>
+            {{ form.data_nascimento }}
+            {% if form.data_nascimento.errors %}
+                <div style="color: #ffb4b4;">{{ form.data_nascimento.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.objetivo.id_for_label }}">Objetivo</label>
+            {{ form.objetivo }}
+            {% if form.objetivo.errors %}
+                <div style="color: #ffb4b4;">{{ form.objetivo.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.observacoes.id_for_label }}">Observacoes</label>
+            {{ form.observacoes }}
+            {% if form.observacoes.errors %}
+                <div style="color: #ffb4b4;">{{ form.observacoes.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn" style="justify-self: start;">Criar aluno</button>
+    </form>
+</section>
+{% endblock %}

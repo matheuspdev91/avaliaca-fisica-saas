@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.forms import inlineformset_factory
 
 from .models import (
@@ -13,6 +14,8 @@ from .models import (
     VariacaoExercicio,
     VideoExercicio,
 )
+
+User = get_user_model()
 
 
 class AvaliacaoFisicaForm(forms.ModelForm):
@@ -78,6 +81,38 @@ class CriarTreinoForm(forms.Form):
 
         if user is not None:
             self.fields['aluno'].queryset = Aluno.objects.filter(user=user).order_by('nome')
+
+
+class CriarAlunoForm(forms.ModelForm):
+    email = forms.EmailField(label='Email')
+
+    class Meta:
+        model = Aluno
+        fields = ['nome', 'email', 'telefone', 'data_nascimento', 'objetivo', 'observacoes']
+        labels = {
+            'nome': 'Nome',
+            'telefone': 'Telefone',
+            'data_nascimento': 'Data de nascimento',
+            'objetivo': 'Objetivo',
+            'observacoes': 'Observacoes',
+        }
+        widgets = {
+            'data_nascimento': forms.DateInput(attrs={'type': 'date'}),
+            'objetivo': forms.TextInput(attrs={'placeholder': 'Ex: Ganho de massa muscular'}),
+            'observacoes': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Informacoes adicionais'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['telefone'].required = False
+        self.fields['objetivo'].required = False
+        self.fields['observacoes'].required = False
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip().lower()
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError('Ja existe um usuario cadastrado com este email.')
+        return email
 
 
 class ExercicioTreinoForm(forms.ModelForm):
