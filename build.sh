@@ -3,13 +3,10 @@ set -o errexit
 
 pip install -r requirements.txt
 
-# Cria pastas de estáticos se não existirem
-mkdir -p static/css
-mkdir -p static/js
-mkdir -p static/images
+# Cria a pasta static no caminho correto do Render
+mkdir -p /opt/render/project/src/static/css
+mkdir -p /opt/render/project/src/static/js
+mkdir -p /opt/render/project/src/static/images
 
-# Coleta arquivos estáticos
 python manage.py collectstatic --no-input
-
-# Roda migrações
 python manage.py migrate
