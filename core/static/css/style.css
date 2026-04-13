@@ -14,25 +14,9 @@ html, body {
 }
 
 body {
-    background: #0b0f0d !important;
-    color: #ffffff !important;
+    background: #0b0f0d;
+    color: #ffffff;
 }
-
-body > div,
-body > main,
-body > section,
-.fitflix-layout,
-.main,
-.content {
-    background: #0b0f0d !important;
-    color: #ffffff !important;
-    min-height: 100vh;
-}
-
-body * {
-    background-color: transparent;
-}
-
 /* ============================================
    FITFLIX LAYOUT
    ============================================ */
