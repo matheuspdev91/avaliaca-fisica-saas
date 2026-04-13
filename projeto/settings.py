@@ -1,5 +1,4 @@
-
-settings_corrigido = '''"""
+"""
 Django settings for projeto project.
 """
 
@@ -59,12 +58,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'projeto.wsgi.application'
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3'
+if os.environ.get('DATABASE_URL'):
+    # Produção (Render) - PostgreSQL
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'), conn_max_age=600)
     }
-}
+else:
+    # Desenvolvimento - SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -120,6 +127,3 @@ AUTH_USER_MODEL = 'core.Usuario'
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-'''
-
-print(settings_corrigido)
