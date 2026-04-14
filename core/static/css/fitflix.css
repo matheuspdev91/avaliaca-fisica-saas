@@ -498,23 +498,50 @@ body {
 }
 
 /* ========================================
-   SCROLLBAR PERSONALIZADA
+   SCROLLBAR PERSONALIZADA - CORRIGIDO
    ======================================== */
-*::-webkit-scrollbar {
+
+/* Firefox - propriedades padrão */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--verde) var(--fundo);
+}
+
+/* WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 
-*::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background: var(--fundo);
 }
 
-*::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background: var(--verde);
     border-radius: 4px;
 }
 
-*::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
+    background: var(--verde-escuro);
+}
+
+/* Para elementos específicos com scroll */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: var(--fundo);
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--verde);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
     background: var(--verde-escuro);
 }
 
