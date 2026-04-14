@@ -500,21 +500,21 @@ body {
 /* ========================================
    SCROLLBAR PERSONALIZADA
    ======================================== */
-::-webkit-scrollbar {
+*::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 
-::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
     background: var(--fundo);
 }
 
-::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
     background: var(--verde);
     border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+*::-webkit-scrollbar-thumb:hover {
     background: var(--verde-escuro);
 }
 
