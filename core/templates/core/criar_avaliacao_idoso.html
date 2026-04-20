@@ -1,57 +1,79 @@
-{% extends 'core/base.html' %}
+﻿{% extends 'core/base.html' %}
 
 {% block content %}
+<div class="fitflix-form-container">
+    <form method="post">
+        {% csrf_token %}
 
-<h2>Nova avaliação - Idoso</h2>
+        <div class="fitflix-card">
+            <h1 class="fitflix-title">Nova Avaliação - Idoso</h1>
 
-<form method="post">
-    {% csrf_token %}
-
-    <!--DADOS PESSOAIS-->
-    <div class="card">
-        <h3>DADOS PESSOAIS</h3>
-        {{ avaliacao_form.nome.label_tag }}
-        {{ avaliacao_form.nome }}
-
-        {{ avaliacao_form.sexo.label_tag }}
-        {{ avaliacao_form.sexo }}
-
-        {{ avaliacao_form.data_nascimento.label_tag }}
-        {{ avaliacao_form.data_nascimento }}
-
-        {{ avaliacao_form.altura.label_tag }}
-        {{ avaliacao_form.altura }}
-
-        {{ avaliacao_form.peso.label_tag }}
-        {{ avaliacao_form.peso }}
-
-        <h5 class="mt-4">Circunferências</h5>
-
-        <div class="row">
-            <div class="col-md-6">
-                <label>Panturrilha direita (cm)</label>
-                {{ circ_form.panturrilha_direita }}
-            </div>
-
-            <div class="col-md-6">
-                <label>Panturrilha esquerda (cm)</label>
-                {{ circ_form.panturrilha_esquerda }}
+            <div class="form-group">
+                <label for="tipo">Tipo de Avaliação</label>
+                <select name="tipo" id="tipo">
+                    <option value="adulto">Adulto</option>
+                    <option value="crianca">Criança</option>
+                    <option value="idoso" selected>Idoso</option>
+                </select>
             </div>
         </div>
 
-   
+        <div class="fitflix-card">
+            <h2 class="fitflix-title">Dados Pessoais</h2>
+            {% for field in avaliacao_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+        </div>
 
+        <div class="fitflix-card">
+            <h2 class="fitflix-title">Circunferências</h2>
+            {% for field in circ_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+        </div>
 
+        <div class="fitflix-card">
+            <h2 class="fitflix-title">Testes Funcionais</h2>
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+        </div>
 
-    
-    <div class="card">
-        
-        <h3>Testes funcionais</h3>
-        
-        {{ form.as_p }}
-        
-    </div>
-        <button type="submit">Salvar</button>
-</form>
+        <div class="fitflix-card">
+            <div class="form-group">
+                <button type="submit" class="btn">Salvar avaliação</button>
+            </div>
+        </div>
+    </form>
+</div>
 
+<script>
+document.getElementById('tipo').addEventListener('change', function() {
+    const tipo = this.value;
+
+    if (tipo === 'crianca') {
+        window.location.href = "{% url 'core:criar_avaliacao_crianca' %}";
+    }
+
+    if (tipo === 'idoso') {
+        window.location.href = "{% url 'core:criar_avaliacao_idoso' %}";
+    }
+
+    if (tipo === 'adulto') {
+        window.location.href = "{% url 'core:criar_avaliacao' %}";
+    }
+});
+</script>
 {% endblock %}

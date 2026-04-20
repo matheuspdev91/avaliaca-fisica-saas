@@ -1,4 +1,4 @@
-from django import forms
+﻿from django import forms
 from django.contrib.auth import get_user_model
 from django.forms import inlineformset_factory
 
@@ -13,6 +13,7 @@ from .models import (
     Treino,
     VariacaoExercicio,
     VideoExercicio,
+    
 )
 
 User = get_user_model()
@@ -21,38 +22,86 @@ User = get_user_model()
 class AvaliacaoFisicaForm(forms.ModelForm):
     class Meta:
         model = AvaliacaoFisica
-        exclude = ('usuario', 'criado_em')
+        fields = [
+            'nome',
+            'sexo',
+            'data_nascimento',
+            'altura',
+            'peso',
+            'objetivo',
+            'percentual_gordura',
+        ]
+        widgets = {
+            'data_nascimento': forms.DateInput(attrs={'type': 'date'}),
+        }
 
 
 class CircunferenciaForm(forms.ModelForm):
     class Meta:
         model = Circunferencia
-        exclude = ('avaliacao',)
+        fields = [
+            'ombros',
+            'torax',
+            'cintura',
+            'abdome',
+            'quadril',
+            'braco_direito',
+            'braco_esquerdo',
+            'coxa_direita',
+            'coxa_esquerda',
+            'panturrilha_direita',
+            'panturrilha_esquerda',
+        ]
+        labels = {
+            'ombros': 'Ombros',
+            'torax': 'Tórax',
+            'cintura': 'Cintura',
+            'abdome': 'Abdome',
+            'quadril': 'Quadril',
+            'braco_direito': 'Braço direito',
+            'braco_esquerdo': 'Braço esquerdo',
+            'coxa_direita': 'Coxa direita',
+            'coxa_esquerda': 'Coxa esquerda',
+            'panturrilha_direita': 'Panturrilha direita',
+            'panturrilha_esquerda': 'Panturrilha esquerda',
+        }
 
 
 class AdipometriaForm(forms.ModelForm):
     class Meta:
         model = Adipometria
-        exclude = ('avaliacao',)
+        fields = [
+            'tricipital',
+            'subescapular',
+            'supra_iliaca',
+            'abdominal',
+            'coxa',
+            'peito',
+            'axilar_media',
+        ]
 
 
 class AvaliacaoCriancaForm(forms.ModelForm):
     class Meta:
         model = AvaliacaoCrianca
-        exclude = ('avaliacao',)
+        fields = [
+            'coordenacao',
+            'equilibrio_segundos',
+            'flexoes',
+            'agilidade_tempo',
+            'salto_horizontal',
+        ]
 
 
 class AvaliacaoIdosoForm(forms.ModelForm):
     class Meta:
         model = AvaliacaoIdoso
-        field = '__all__'
-        exclude = ('avaliacao',)
-
-
-class CircunferenciaForm(forms.ModelForm):
-    class Meta:
-        model = Circunferencia
-        exclude = ['avaliacao']
+        fields = [
+            'sentar_levantar',
+            'tug_tempo',
+            'equilibrio_segundos',
+            'caminhada_6min',
+        ]
 
 
 class TreinoForm(forms.ModelForm):
@@ -69,18 +118,6 @@ class CriarTreinoForm(forms.Form):
         label='Nome do treino',
         max_length=100,
     )
-    aluno = forms.ModelChoiceField(
-        label='Aluno',
-        queryset=Aluno.objects.none(),
-        empty_label='Selecione um aluno',
-    )
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super().__init__(*args, **kwargs)
-
-        if user is not None:
-            self.fields['aluno'].queryset = Aluno.objects.filter(user=user).order_by('nome')
 
 
 class CriarAlunoForm(forms.ModelForm):
@@ -119,13 +156,10 @@ class ExercicioTreinoForm(forms.ModelForm):
     class Meta:
         model = ExercicioTreino
         fields = [
-            'exercicio',
-            'variacao',
-            'series',
-            'repeticoes',
-            'descanso',
-            'carga',
-        ]
+    'exercicio',
+    'variacao',
+]
+        
         labels = {
             'exercicio': 'Exercício',
             'variacao': 'Variação',
@@ -158,3 +192,29 @@ ExercicioTreinoFormSet = inlineformset_factory(
     extra=1,
     can_delete=True,
 )
+
+
+# ======================
+# AVALIAÇÃO PARA IDOSO
+# =====================
+
+class CircunferenciaIdosoForm(forms.ModelForm):
+    class Meta:
+        model = Circunferencia
+        fields = [
+            'cintura',
+            'quadril',
+            'braco_direito',
+            'braco_esquerdo',
+            'panturrilha_direita',
+            'panturrilha_esquerda',
+        ]
+
+        labels = {
+            'cintura': 'Cintura',
+            'quadril': 'Quadril',
+            'braco_direito': 'Braço Direito',
+            'braco_esquerdo': 'Braço Esquerdo',
+            'panturrilha_direita': 'Panturrilha Direita',
+            'panturrilha_esquerda': 'Panturrilha Esquerda',
+        }

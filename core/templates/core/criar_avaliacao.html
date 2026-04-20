@@ -1,198 +1,79 @@
-{% extends 'core/base.html' %}
-{% load static %}
+﻿{% extends 'core/base.html' %}
 
 {% block content %}
+<div class="fitflix-form-container">
+    <form method="post">
+        {% csrf_token %}
 
-<form method="post">
-  {% csrf_token %}
+        <div class="fitflix-card">
+            <h1 class="fitflix-title">Nova Avaliação</h1>
 
-  <label>Tipo de Avaliação</label>
-
-  <select name="tipo" id="tipo" class="form-control mb-3">
-    <option value="adulto">Adulto</option>
-    <option value="crianca">Criança</option>
-    <option value="idoso">Idoso</option>
-    </select>
-
-    <!-- ADULTO -->
-   <div id="form-adulto">
-
-    <!--DADOS PESSOAIS-->
-
-    <div class="card">
-      <h3>DADPS PESSOAIS</h3>
-
-      <hr>
-
-      <div class="form-grid">
-
-        <div>
-          {{ avaliacao_form.nome.label_tag }}
-          {{ avaliacao_form.nome }}
-        </div>
-
-        <div>
-          {{ avaliacao_form.sexo.label_tag }}
-          {{ avaliacao_form.sexo }}
-        </div>
-
-        <div>
-          {{ avaliacao_form.data_nascimento.label_tag }}
-          {{ avaliacao_form.data_nascimento }}
-        </div>
-
-        <div>
-          {{ avaliacao_form.altura.label_tag }}
-          {{ avaliacao_form.altura }}
-        </div>
-
-        <div>
-          {{ avaliacao_form.peso.label_tag }}
-          {{ avaliacao_form.peso }}
-        </div>
-
-        <div>
-          {{ avaliacao_form.percentual_gordura.label_tag }}
-          {{ avaliacao_form.percentual_gordura }}
-        </div>
-
-      </div>
-
-      <!--OBJETIVO-->
-      <div class="form-group full">
-        {{ avaliacao_form.objetivo.label_tag }}
-        {{ avaliacao_form.objetivo }}
-      </div>
-    
-    </div>
-
-
-    
-        <!--CIRCUNFERENCIAS-->
-        <div class="card">
-            <h2>--CIRCUNFERÊNCIAS--</h2>
-
-            <div class="form-grid">
-
-              <div>
-                {{ circ_form.ombros.label_tag }}
-                {{ circ_form.ombros }}
-
-              </div>
-
-              <div>
-                {{ circ_form.peito.label_tag }}
-                {{ circ_form.peito}}
-              </div>
-
-              <div>
-                {{ circ_form.cintura.label_tag }}
-                {{ circ_form.cintura }}
-              </div>
-
-              <div>
-                {{ circ_form.quadril.label_tag }}
-                {{ circ_form.quadril }}
-              </div>
-
-              <div>
-                {{ circ_form.braco_direito.label_tag }}
-                {{ circ_form.braco_direito }}
-              </div>
-
-              <div>
-                {{ circ_form.braco_esquerdo.label_tag }}
-                {{ circ_form.braco_esquerdo }}
-              </div>
-
-              <div>
-                {{ circ_form.coxa_direita.label_tag }}
-                {{ circ_form.coxa_direita }}
-              </div>
-
-              <div>
-                {{ circ_form.coxa_esquerda.label_tag }}
-                {{ circ_form.coxa_esquerda }}
-              </div>
-
-              <div>
-                {{ circ_form.panturrilha_direita.label_tag }}
-                {{ circ_form.panturrilha_direita }}
-              </div>
-
-              <div>
-                {{ circ_form.panturrilha_esquerda.label_tag }}
-                {{ circ_form.panturrilha_esquerda}}
-              </div>
-
+            <div class="form-group">
+                <label for="tipo">Tipo de Avaliação</label>
+                <select name="tipo" id="tipo">
+                    <option value="adulto" selected>Adulto</option>
+                    <option value="crianca">Criança</option>
+                    <option value="idoso">Idoso</option>
+                </select>
             </div>
         </div>
 
-        <!--ADIPOMETRIA-->
-        <div class="card">
-            <h3>ADIPOMETRIA</h3>
-
-            <div class="form-grid">
-
-              <div>
-                {{ adip_form.tricipital.label_tag }}
-                {{ adip_form.tricipital }}
-              </div>
-
-              <div>
-                {{ adip_form.subescapular.label_tag }}
-                {{ adip_form.subescapular }}
-              </div>
-
-              <div>
-                {{ adip_form.supra_iliaca.label_tag }}
-                {{ adip_form.supra_iliaca }}
-              </div>
-
-              <div>
-                {{ adip_form.abdominal.label_tag }}
-                {{ adip_form.abdominal }}
-              </div>
-
-              <div>
-                {{ adip_form.coxa.label_tag }}
-                {{ adip_form.coxa }}
-              </div>
-
-              <div>
-                {{ adip_form.peito.label_tag }}
-                {{ adip_form.peito }}
-              </div>
-
-              <div>
-                {{ adip_form.axilar_media.label_tag }}
-                {{ adip_form.axilar_media }}
-              </div>
-            </div>
+        <div class="fitflix-card">
+            <h2 class="fitflix-title">Dados Pessoais</h2>
+            {% for field in avaliacao_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
         </div>
 
-        <button type="submit">Salvar avaliação</button>
+        <div class="fitflix-card">
+            <h2 class="fitflix-title">Circunferências</h2>
+            {% for field in circ_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+        </div>
 
-      </form>
+        <div class="fitflix-card">
+            <h2 class="fitflix-title">Adipometria</h2>
+            {% for field in adip_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+        </div>
 
-    <script>
+        <div class="fitflix-card">
+            <div class="form-group">
+                <button type="submit" class="btn">Salvar avaliação</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
 document.getElementById('tipo').addEventListener('change', function() {
     const tipo = this.value;
 
-    if (tipo == 'crianca') {
+    if (tipo === 'crianca') {
         window.location.href = "{% url 'core:criar_avaliacao_crianca' %}";
     }
 
-    if (tipo == 'idoso') {
+    if (tipo === 'idoso') {
         window.location.href = "{% url 'core:criar_avaliacao_idoso' %}";
     }
 
-    if (tipo == 'adulto') {
-        window.location.href = "{% url 'core:criar_avaliacao' %}"
+    if (tipo === 'adulto') {
+        window.location.href = "{% url 'core:criar_avaliacao' %}";
     }
 });
-  </script>
+</script>
 {% endblock %}
-    
-
-  

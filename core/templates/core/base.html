@@ -7,136 +7,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}FitFlix{% endblock %}</title>
 
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/fitflix.css' %}">
     <link rel="icon" href="{% static 'css/favicon.ico' %}">
 </head>
 
-<body class="theme-dark">
+<body>
 
-    <div class="fitflix-layout">
+<div class="fitflix-layout">
 
-        <!-- SIDEBAR -->
-        <aside class="fitflix-sidebar">
-            <div class="fitflix-logo">
-                <a href="{% url 'core:avaliacoes' %}">
-                    <span>Fit</span><span class="flix">Flix</span>
+    <!-- SIDEBAR -->
+    <aside class="fitflix-sidebar">
+
+        <!-- LOGO -->
+        <div class="fitflix-logo">
+            <a href="{% url 'core:avaliacoes' %}">
+                <span>Fit</span><span class="flix">Flix</span>
+            </a>
+        </div>
+
+        <nav class="fitflix-nav">
+
+            {% if user.is_authenticated %}
+
+            <!-- FITFLIX -->
+            <a href="{% url 'core:fitflix' %}"
+               class="fitflix-nav-link {% if request.resolver_match.url_name == 'fitflix' %}active{% endif %}">
+                <span>FitFlix</span>
+            </a>
+
+            <!-- MENU -->
+            <div class="fitflix-nav-section">
+                <p class="fitflix-nav-title">Menu</p>
+
+                {% if user.aluno %}
+                    <a href="{% url 'core:painel_aluno' user.aluno.id %}" class="fitflix-nav-link">
+                        <span>Meus Treinos</span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'core:avaliacoes' %}" class="fitflix-nav-link">
+                        <span>Avaliações</span>
+                    </a>
+
+                    <a href="{% url 'core:escolher_tipo' %}" class="fitflix-nav-link">
+                        <span>Nova Avaliação</span>
+                    </a>
+
+                    <a href="{% url 'core:criar_aluno' %}" class="fitflix-nav-link">
+                        <span>Cadastrar Aluno</span>
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- CONTA -->
+            <div class="fitflix-nav-section">
+                <p class="fitflix-nav-title">Conta</p>
+
+                <a href="{% url 'core:logout' %}" class="fitflix-nav-link">
+                    <span>Sair</span>
                 </a>
             </div>
 
-            <nav class="fitflix-nav">
+            {% endif %}
 
-                <!-- ===== MENU ===== -->
-                <div class="fitflix-nav-section">
-                    <p class="fitflix-nav-title">Menu</p>
+        </nav>
 
-                    {% if user.is_authenticated %}
-
-                        {% if user.aluno %}
-                            {# ===== ALUNO ===== #}
-
-                            <a href="{% url 'core:painel_aluno' user.aluno.id %}" class="fitflix-nav-link {% if request.resolver_match.url_name == 'painel_aluno' %}active{% endif %}">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 12h18"></path>
-                                    <path d="M3 6h18"></path>
-                                    <path d="M3 18h18"></path>
-                                </svg>
-                                <span>Meus Treinos</span>
-                            </a>
-
-                        {% else %}
-                            {# ===== PERSONAL ===== #}
-
-                            <!-- Avaliações -->
-                            <a href="{% url 'core:avaliacoes' %}" class="fitflix-nav-link {% if request.resolver_match.url_name == 'avaliacoes' %}active{% endif %}">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M9 11l3 3L22 4"></path>
-                                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
-                                </svg>
-                                <span>Avaliações</span>
-                            </a>
-
-                            <!-- Nova Avaliação -->
-                            <a href="{% url 'core:escolher_tipo' %}" class="fitflix-nav-link {% if request.resolver_match.url_name == 'escolher_tipo' %}active{% endif %}">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                                <span>Nova Avaliação</span>
-                            </a>
-
-                            <!-- FitFlix -->
-                            <a href="{% url 'core:fitflix' %}" class="fitflix-nav-link {% if request.resolver_match.url_name == 'fitflix' %}active{% endif %}">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                                </svg>
-                                <span>FitFlix</span>
-                            </a>
-
-                            <!-- Cadastrar Aluno -->
-                            <a href="{% url 'core:criar_aluno' %}" class="fitflix-nav-link {% if request.resolver_match.url_name == 'criar_aluno' %}active{% endif %}">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="8.5" cy="7" r="4"></circle>
-                                    <line x1="20" y1="8" x2="20" y2="14"></line>
-                                    <line x1="17" y1="11" x2="23" y2="11"></line>
-                                </svg>
-                                <span>Cadastrar Aluno</span>
-                            </a>
-
-                        {% endif %}
-
-                    {% endif %}
-                </div>
-
-                <!-- CONTA -->
-                {% if user.is_authenticated %}
-                <div class="fitflix-nav-section">
-                    <p class="fitflix-nav-title">Conta</p>
-                    
-                    <a href="{% url 'core:logout' %}" class="fitflix-nav-link">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                            <polyline points="16 17 21 12 16 7"></polyline>
-                            <line x1="21" y1="12" x2="9" y2="12"></line>
-                        </svg>
-                        <span>Sair</span>
-                    </a>
-                </div>
-                {% endif %}
-            </nav>
-
-            {% if user.is_authenticated %}
-            <div class="fitflix-user">
-                <div class="fitflix-user-avatar">{{ request.user.username|first|upper }}</div>
-                <span class="fitflix-user-name">{{ request.user.username }}</span>
+        <!-- USER -->
+        {% if user.is_authenticated %}
+        <div class="fitflix-user">
+            <div class="fitflix-user-avatar">
+                {{ request.user.username|first|upper }}
             </div>
-            {% endif %}
-        </aside>
+            <span class="fitflix-user-name">
+                {{ request.user.username }}
+            </span>
+        </div>
+        {% endif %}
 
-        <!-- MAIN -->
-        <main class="fitflix-main">
-            {% if messages %}
-                <div style="display: grid; gap: 12px; margin-bottom: 24px;">
-                    {% for message in messages %}
-                        <div style="padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.12);">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
+    </aside>
 
-            {% block content %}{% endblock %}
-        </main>
+    <!-- MAIN -->
+    <main class="fitflix-main">
 
-    </div>
+        {% if messages %}
+        <div class="fitflix-messages">
+            {% for message in messages %}
+            <div class="fitflix-message">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-    <footer class="fitflix-footer">
-        <small>© 2026 - FitFlix</small>
-    </footer>
+        {% block content %}{% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    {% block scripts %}{% endblock %}
-    <script src="{% static 'js/fitflix.js' %}"></script>
+    </main>
+
+</div>
+
+<footer class="fitflix-footer">
+    <small>© 2026 - FitFlix</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/fitflix.js' %}"></script>
+
+{% block scripts %}{% endblock %}
 
 </body>
 </html>

@@ -1,37 +1,28 @@
-{% extends "core/base.html" %}
+﻿{% extends "core/base.html" %}
 
 {% block content %}
+<div class="fitflix-form-container">
+    <div class="fitflix-card">
+        <h1 class="fitflix-title">Avaliações</h1>
 
-<div class="fitflix-header-page">
-    <h1>Avaliações</h1>
-    <p>Gerencie todas as avaliações dos seus alunos</p>
-</div>
-
-<a href="{% url 'core:criar_avaliacao' %}" class="btn" style="margin-bottom: 25px;">
-    + Nova Avaliação
-</a>
-
-{% if avaliacoes %}
-    <div class="fitflix-exercises-grid">
-        {% for avaliacao in avaliacoes %}
-        <div class="fitflix-exercise-card">
-            <div class="fitflix-exercise-info">
-                <h3>{{ avaliacao.nome }}</h3>
-                <p style="color: var(--dark-text-muted); margin-bottom: 15px;">
-                    {{ avaliacao.criado_em|date:"d/m/Y" }}
-                </p>
-                <a href="{% url 'core:detalhe_avaliacao' avaliacao.id %}" class="btn" style="width: 100%; text-align: center;">
-                    Visualizar
-                </a>
-            </div>
+        <div class="form-group">
+            <a href="{% url 'core:criar_avaliacao' %}" class="btn">Nova Avaliação</a>
         </div>
-        {% endfor %}
-    </div>
-{% else %}
-    <div class="card" style="text-align: center; padding: 60px 20px;">
-        <p style="font-size: 1.2rem; margin-bottom: 20px;">Você ainda não possui avaliações</p>
-        <a href="{% url 'core:criar_avaliacao' %}" class="btn">Criar primeira avaliação</a>
-    </div>
-{% endif %}
 
+        {% if avaliacoes %}
+            {% for avaliacao in avaliacoes %}
+                <div class="form-group">
+                    <h3>{{ avaliacao.nome }}</h3>
+                    <p>{{ avaliacao.criado_em|date:"d/m/Y" }}</p>
+                    <a href="{% url 'core:detalhe_avaliacao' avaliacao.id %}" class="btn">Visualizar</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="form-group">
+                <p>Você ainda não possui avaliações.</p>
+                <a href="{% url 'core:criar_avaliacao' %}" class="btn">Criar primeira avaliação</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
