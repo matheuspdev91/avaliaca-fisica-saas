@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-!57*5l#o8g!b!0=vpq4!l90ubg8^m7_kv+n$m2u0a3day)l^^9')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = ['fit-flix.onrender.com', 'localhost', '127.0.0.1', '*']
 
