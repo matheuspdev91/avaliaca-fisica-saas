@@ -3,10 +3,11 @@ set -o errexit
 
 pip install -r requirements.txt
 
-# Cria a pasta static no caminho correto do Render
-mkdir -p /opt/render/project/src/static/css
-mkdir -p /opt/render/project/src/static/js
-mkdir -p /opt/render/project/src/static/images
+# RESET TEMPORÁRIO DO BANCO (IMPORTANTE)
+python manage.py reset_db
 
-python manage.py collectstatic --no-input
+# Agora sim, cria as tabelas de verdade
 python manage.py migrate
+
+# Depois coleta os estáticos
+python manage.py collectstatic --noinput
