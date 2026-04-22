@@ -1,0 +1,11 @@
+<h1>Treino</h1>
+
+<p><strong>Aluno:</strong> {{ treino.aluno.nome }}</p>
+
+<p>{{ treino.descricao }}</p>
+
+<input type="text" value="{{ link }}" readonly>
+
+<button onclick="navigator.clipboard.writeText('{{ link }}')">
+    Copiar link
+</button>

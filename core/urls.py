@@ -35,6 +35,7 @@ urlpatterns = [
     # Treinos
     path('treino/<int:treino_id>/', views.treino_detail, name='treino_detail'),
     path('aluno/<int:aluno_id>/', views.painel_aluno, name='painel_aluno'),
+    path('treino/<uuid:token>/', views.ver_treino, name='ver_treino'),
 
     # Reset Password
 

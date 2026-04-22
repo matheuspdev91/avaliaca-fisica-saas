@@ -113,14 +113,34 @@ class TreinoForm(forms.ModelForm):
         }
 
 
+# =======================
+# CRIAR TREINO FORM
+# ======================
+
 class CriarTreinoForm(forms.Form):
     nome = forms.CharField(
         label='Nome do treino',
         max_length=100,
     )
 
+    aluno = forms.ModelChoiceField(
+        queryset=Aluno.objects.all(),
+        required=False,
+        label='Aluno existente'
+    )
+
+    nome_aluno = forms.CharField(
+        label='Nome do aluno (novo)',
+        required=False
+    )
+
+
+# ===================
+# CRIAR ALUNO FORM 
+# ===================
 
 class CriarAlunoForm(forms.ModelForm):
+
     email = forms.EmailField(label='Email')
 
     class Meta:

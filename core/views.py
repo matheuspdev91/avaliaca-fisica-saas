@@ -9,6 +9,7 @@ import secrets
 import string
 from collections import defaultdict
 from .models import GrupoMuscular
+from .models import Treino
 
 from .models import (
     Aluno, Treino,
@@ -428,41 +429,33 @@ def escolher_tipo(request):
 
 @login_required
 def criar_treino(request):
-    alunos = Aluno.objects.all()
-
     if request.method == 'POST':
         form = CriarTreinoForm(request.POST)
 
-        aluno_id = request.POST.get('aluno_id')
-        aluno = None
+        if form.is_valid():
+            nome = form.cleaned_data['nome']
+            aluno = form.cleaned_data['aluno']
+            nome_aluno = form.cleaned_data['nome_aluno']
 
-        if not aluno_id:
-            messages.error(request, "Selecione um aluno.")
+            if not aluno and not nome_aluno:
+                messages.error(request, "Selecione um aluno ou digite um nome.")
+            else:
+                treino = Treino.objects.create(
+                    nome=nome,
+                    aluno=aluno if aluno else None,
+                    nome_aluno=nome_aluno if not aluno else None
+                )
+
+                messages.success(request, "Treino criado com sucesso!")
+                return redirect('core:editar_treino', treino_id=treino.id)
         else:
-            aluno = Aluno.objects.filter(id=aluno_id).first()
-
-            if not aluno:
-                messages.error(request, "Aluno inválido.")
-
-        if form.is_valid() and aluno:
-            treino = Treino.objects.create(
-                nome=form.cleaned_data['nome'],
-                aluno=aluno
-            )
-           
-
-            messages.success(request, "Treino criado com sucesso!")
-            return redirect('core:editar_treino', treino_id=treino.id)
-
-        else:
-            messages.error(request, "Erro ao criar treino.")
+            messages.error(request, "Erro no formulário.")
 
     else:
         form = CriarTreinoForm()
 
     return render(request, 'core/criar_treino.html', {
         'form': form,
-        'alunos': alunos,
         'modo_edicao': False
     })
 # ==================
@@ -595,4 +588,21 @@ def exercicio_detalhe(request, id):
     return render(request, 'core/exercicio_detalhe.html', {
         'exercicio': exercicio,
         'variacoes': variacoes
+    })
+
+
+
+# ================
+# ENVIAR TREINO
+# ================
+
+def ver_treino(request, token):
+    treino = get_object_or_404(Treino, token=token)
+
+    link = request.build_absolute_url(treino.get_link())
+
+
+    return render(request, 'treino_publico.html', {
+        'treino': treino,
+        'link': link
     })

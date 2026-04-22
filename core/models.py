@@ -2,7 +2,7 @@ from datetime import date
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+import uuid
 
 
 # ========================
@@ -224,4 +224,18 @@ class Exercicio(models.Model):
     nome = models.CharField(max_length=100)
     def __str__(self):
         return self.nome
+    
+
+# =================
+# GERAR TOKEN
+# =================
+
+class Treino(models.Model):
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
+    descricao = models.TextField()
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
+
+    def get_link(self):
+        return f'/treino/{self.token}'
     
