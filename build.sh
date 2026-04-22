@@ -1,12 +1,8 @@
-from django.core.management.base import BaseCommand
-from django.db import connection
+#!/usr/bin/env bash
+set -o errexit
 
-class Command(BaseCommand):
-    help = 'Reset database tables'
+pip install -r requirements.txt
 
-    def handle(self, *args, **kwargs):
-        with connection.cursor() as cursor:
-            cursor.execute("DROP SCHEMA public CASCADE;")
-            cursor.execute("CREATE SCHEMA public;")
-
-        self.stdout.write(self.style.SUCCESS('Database resetado!'))
+python manage.py reset_db
+python manage.py migrate
+python manage.py collectstatic --noinput
