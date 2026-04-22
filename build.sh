@@ -1,13 +1,12 @@
-#!/usr/bin/env bash
-set -o errexit
+from django.core.management.base import BaseCommand
+from django.db import connection
 
-pip install -r requirements.txt
+class Command(BaseCommand):
+    help = 'Reset database tables'
 
-# RESET TEMPORÁRIO DO BANCO (IMPORTANTE)
-python manage.py reset_db
+    def handle(self, *args, **kwargs):
+        with connection.cursor() as cursor:
+            cursor.execute("DROP SCHEMA public CASCADE;")
+            cursor.execute("CREATE SCHEMA public;")
 
-# Agora sim, cria as tabelas de verdade
-python manage.py migrate
-
-# Depois coleta os estáticos
-python manage.py collectstatic --noinput
+        self.stdout.write(self.style.SUCCESS('Database resetado!'))
