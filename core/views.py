@@ -394,9 +394,37 @@ def editar_treino(request, treino_id):
 
 @login_required
 def criar_avaliacao(request):
-    avaliacao_form = AvaliacaoFisicaForm(request.POST or None)
-    circ_form = CircunferenciaForm(request.POST or None)
-    adip_form = AdipometriaForm(request.POST or None)
+    if request.method == 'POST':
+        avaliacao_form = AvaliacaoFisicaForm(request.POST)
+        circ_form = CircunferenciaForm(request.POST)
+        adip_form = AdipometriaForm(request.POST)
+
+        if (
+            avaliacao_form.is_valid() and
+            circ_form.is_valid() and
+            adip_form.is_valid()
+        ):
+            # salva avaliação
+            avaliacao = avaliacao_form.save(commit=False)
+            avaliacao.usuario = request.user
+            avaliacao.save()
+
+            # salva circunferência
+            circ = circ_form.save(commit=False)
+            circ.avaliacao = avaliacao
+            circ.save()
+
+            # salva adipometria
+            adip = adip_form.save(commit=False)
+            adip.avaliacao = avaliacao
+            adip.save()
+
+            return redirect('core:avaliacoes')
+
+    else:
+        avaliacao_form = AvaliacaoFisicaForm()
+        circ_form = CircunferenciaForm()
+        adip_form = AdipometriaForm()
 
     return render(request, 'core/criar_avaliacao.html', {
         'avaliacao_form': avaliacao_form,
