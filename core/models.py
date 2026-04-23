@@ -206,7 +206,6 @@ class Treino(models.Model):
 
 
 class ExercicioTreino(models.Model):
-    nome = models.CharField(max_length=100)
     treino = models.ForeignKey(Treino, on_delete=models.CASCADE, related_name='exercicios')
     exercicio = models.ForeignKey(VideoExercicio, on_delete=models.CASCADE)
     variacao = models.ForeignKey(VariacaoExercicio, on_delete=models.CASCADE)
