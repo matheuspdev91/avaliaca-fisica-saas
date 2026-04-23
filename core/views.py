@@ -651,7 +651,7 @@ def exercicio_detalhe(request, id):
 def ver_treino(request, token):
     treino = get_object_or_404(Treino, token=token)
 
-    link = request.build_absolute_url(treino.get_link())
+    link = request.build_absolute_uri(treino.get_link())
 
 
     return render(request, 'treino_publico.html', {
