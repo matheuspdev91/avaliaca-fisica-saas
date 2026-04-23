@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.utils import timezone
+from urllib.parse import urlencode
 from decimal import Decimal
 import secrets
 import string
@@ -111,6 +113,21 @@ def register_view(request):
 def gerar_senha_aleatoria(tamanho=8):
     caracteres = string.ascii_letters + string.digits
     return ''.join(secrets.choice(caracteres) for _ in range(tamanho))
+
+
+def criar_aluno_minimo(nome_aluno):
+    sufixo = secrets.token_hex(4)
+    email = f'aluno-{sufixo}@fitflix.local'
+    user = User.objects.create_user(
+        username=email,
+        email=email,
+        password=gerar_senha_aleatoria(),
+    )
+    return Aluno.objects.create(
+        user=user,
+        nome=nome_aluno,
+        data_nascimento=timezone.localdate(),
+    )
 
 
 # =================
@@ -353,15 +370,22 @@ def calcular_composicao(avaliacao):
 @login_required
 def editar_treino(request, treino_id):
     treino = get_object_or_404(Treino, id=treino_id)
-    exercicios = treino.exercicios.select_related(
+    exercicios_treino = treino.exercicios.select_related(
         'exercicio',
         'variacao',
     ).order_by('ordem')
 
-    return render(request, 'core/editar_treino.html', {
+    treino_url = request.build_absolute_uri(treino.get_link())
+    whatsapp_message = f"💪 Seu treino está pronto! Acesse aqui: {treino_url}"
+    whatsapp_url = f"https://wa.me/?{urlencode({'text': whatsapp_message})}"
+
+    context = {
         'treino': treino,
-        'exercicios': exercicios,
-    })
+        'exercicios_treino': exercicios_treino,
+        'treino_url': treino_url,
+        'whatsapp_url': whatsapp_url,
+    }
+    return render(request, 'core/editar_treino.html', context)
 
 
 # ==================
@@ -433,21 +457,21 @@ def criar_treino(request):
         form = CriarTreinoForm(request.POST)
 
         if form.is_valid():
-            nome = form.cleaned_data['nome']
-            aluno = form.cleaned_data['aluno']
-            nome_aluno = form.cleaned_data['nome_aluno']
+            aluno = form.cleaned_data.get('aluno')
+            nome_aluno = form.cleaned_data.get('nome_aluno')
 
-            if not aluno and not nome_aluno:
-                messages.error(request, "Selecione um aluno ou digite um nome.")
-            else:
+            with transaction.atomic():
+                if not aluno and nome_aluno:
+                    aluno = criar_aluno_minimo(nome_aluno)
+
                 treino = Treino.objects.create(
-                    nome=nome,
-                    aluno=aluno if aluno else None,
-                    nome_aluno=nome_aluno if not aluno else None
+                    aluno=aluno,
+                    nome=form.cleaned_data.get('nome'),
+                    descricao='',
                 )
 
-                messages.success(request, "Treino criado com sucesso!")
-                return redirect('core:editar_treino', treino_id=treino.id)
+            messages.success(request, "Treino criado com sucesso!")
+            return redirect('core:editar_treino', treino_id=treino.id)
         else:
             messages.error(request, "Erro no formulário.")
 

@@ -194,13 +194,19 @@ class VariacaoExercicio(models.Model):
 class Treino(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
+    descricao = models.TextField()
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     criado_em = models.DateTimeField(auto_now_add=True)
+
+    def get_link(self):
+        return f'/treino/{self.token}'
 
     def __str__(self):
         return f"{self.nome} - {self.aluno.nome}"
 
 
 class ExercicioTreino(models.Model):
+    nome = models.CharField(max_length=100)
     treino = models.ForeignKey(Treino, on_delete=models.CASCADE, related_name='exercicios')
     exercicio = models.ForeignKey(VideoExercicio, on_delete=models.CASCADE)
     variacao = models.ForeignKey(VariacaoExercicio, on_delete=models.CASCADE)
@@ -230,12 +236,3 @@ class Exercicio(models.Model):
 # GERAR TOKEN
 # =================
 
-class Treino(models.Model):
-    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
-    descricao = models.TextField()
-    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-
-
-    def get_link(self):
-        return f'/treino/{self.token}'
-    

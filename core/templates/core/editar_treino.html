@@ -8,10 +8,9 @@
 </div>
 
 <div class="card-treino-editor">
-
     <div class="treino-info">
-        <h2>{{ treino.nome }}</h2>
         <p><strong>Aluno:</strong> {{ treino.aluno.nome }}</p>
+        <p><strong>Link do treino:</strong> <a href="{{ treino_url }}" target="_blank" rel="noopener noreferrer">{{ treino_url }}</a></p>
     </div>
 
     <hr>
@@ -19,15 +18,15 @@
     <div class="exercicios-lista">
         <h3>Exercicios</h3>
 
-        {% if exercicios %}
+        {% if exercicios_treino %}
         <ul>
-            {% for ex in exercicios %}
+            {% for item in exercicios_treino %}
             <li>
-                <p>{{ ex.exercicio.nome }}</p>
-                <p>GIF: {{ ex.variacao.gif }}</p>
+                <p>{{ item.exercicio.nome }}</p>
+                <p>GIF: {{ item.variacao.gif }}</p>
 
-                {% if ex.exercicio.gif %}
-                <img src="{{ ex.exercicio.gif.url }}" width="200">
+                {% if item.exercicio.gif %}
+                <img src="{{ item.exercicio.gif.url }}" width="200" alt="{{ item.exercicio.nome }}">
                 {% endif %}
             </li>
             {% endfor %}
@@ -42,6 +41,9 @@
     <div class="acoes">
         <a href="{% url 'core:adicionar_exercicio' treino.id %}" class="btn">Adicionar exercicio</a>
         <a href="{% url 'core:home' %}" class="btn">Voltar</a>
+        <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn">
+            WhatsApp
+        </a>
     </div>
 
 </div>

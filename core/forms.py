@@ -105,34 +105,55 @@ class AvaliacaoIdosoForm(forms.ModelForm):
 
 
 class TreinoForm(forms.ModelForm):
+    aluno = forms.ModelChoiceField(
+        queryset=Aluno.objects.none(),
+        required=False,
+        label='Aluno existente',
+        empty_label='Selecione um aluno',
+    )
+    nome_aluno = forms.CharField(
+        label='Nome do aluno (novo)',
+        required=False,
+        max_length=100,
+    )
+
     class Meta:
         model = Treino
         fields = ['nome']
         labels = {
             'nome': 'Nome do treino',
         }
+        widgets = {
+            'nome': forms.TextInput(attrs={'placeholder': 'Ex: Treino A - Hipertrofia'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['aluno'].queryset = Aluno.objects.order_by('nome')
+
+        field_classes = 'treino-input'
+        for field_name, field in self.fields.items():
+            existing_class = field.widget.attrs.get('class', '').strip()
+            field.widget.attrs['class'] = f'{existing_class} {field_classes}'.strip()
+
+        self.fields['nome_aluno'].widget.attrs.update({
+            'placeholder': 'Digite o nome do novo aluno',
+        })
+
+    def clean(self):
+        cleaned_data = super().clean()
+        aluno = cleaned_data.get("aluno")
+        nome_aluno = (cleaned_data.get("nome_aluno") or '').strip()
+
+        cleaned_data["nome_aluno"] = nome_aluno
+
+        if not aluno and not nome_aluno:
+            raise forms.ValidationError("Selecione um aluno ou crie um novo.")
+
+        return cleaned_data
 
 
-# =======================
-# CRIAR TREINO FORM
-# ======================
-
-class CriarTreinoForm(forms.Form):
-    nome = forms.CharField(
-        label='Nome do treino',
-        max_length=100,
-    )
-
-    aluno = forms.ModelChoiceField(
-        queryset=Aluno.objects.all(),
-        required=False,
-        label='Aluno existente'
-    )
-
-    nome_aluno = forms.CharField(
-        label='Nome do aluno (novo)',
-        required=False
-    )
+CriarTreinoForm = TreinoForm
 
 
 # ===================
@@ -164,6 +185,23 @@ class CriarAlunoForm(forms.ModelForm):
         self.fields['telefone'].required = False
         self.fields['objetivo'].required = False
         self.fields['observacoes'].required = False
+        self.fields['nome'].widget.attrs.update({
+            'placeholder': 'Ex: Matheus Silva',
+        })
+        self.fields['email'].widget.attrs.update({
+            'placeholder': 'aluno@fitflix.com',
+        })
+        self.fields['telefone'].widget.attrs.update({
+            'placeholder': '(11) 99999-9999',
+        })
+        self.fields['data_nascimento'].widget.attrs.update({
+            'max': '2099-12-31',
+        })
+
+        field_classes = 'input-field'
+        for field in self.fields.values():
+            existing_class = field.widget.attrs.get('class', '').strip()
+            field.widget.attrs['class'] = f'{existing_class} {field_classes}'.strip()
 
     def clean_email(self):
         email = self.cleaned_data['email'].strip().lower()

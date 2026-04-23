@@ -20,30 +20,6 @@
     <form method="post">
         {% csrf_token %}
 
-        <!-- 🔥 SELECT DE ALUNO (SÓ NA CRIAÇÃO) -->
-        {% if not modo_edicao %}
-        <div class="treino-field">
-            <label>Aluno</label>
-
-            <select name="aluno_id" required>
-                <option value="" disabled {% if not request.POST.aluno_id %}selected{% endif %}>
-                    Selecione um aluno
-                </option>
-
-                {% for aluno in alunos %}
-                <option value="{{ aluno.id }}"
-                    {% if request.POST.aluno_id == aluno.id|stringformat:"s" %}selected{% endif %}>
-                    {{ aluno.nome }}
-                </option>
-                {% endfor %}
-            </select>
-
-            {% if not request.POST.aluno_id and form.errors %}
-            <div class="field-errors">Selecione um aluno.</div>
-            {% endif %}
-        </div>
-        {% endif %}
-
         {% if form.non_field_errors %}
         <div class="form-errors">
             {{ form.non_field_errors }}
@@ -52,7 +28,44 @@
 
         <!-- CAMPOS DO TREINO -->
         <div class="treino-editor-grid">
+            <div class="treino-field treino-field-full">
+                <label for="{{ form.nome.id_for_label }}">{{ form.nome.label }}</label>
+                {{ form.nome }}
+                {% if form.nome.help_text %}
+                <p class="treino-help-text">{{ form.nome.help_text }}</p>
+                {% endif %}
+                {% if form.nome.errors %}
+                <div class="field-errors">{{ form.nome.errors }}</div>
+                {% endif %}
+            </div>
+
+            {% if not modo_edicao %}
+            <div class="treino-field treino-field-full treino-choice-card">
+                <p class="treino-help-text">Escolha um aluno existente OU crie um novo.</p>
+            </div>
+
+            <div class="treino-field treino-choice-card">
+                <h3>Selecionar aluno existente</h3>
+                <label for="{{ form.aluno.id_for_label }}">{{ form.aluno.label }}</label>
+                {{ form.aluno }}
+                {% if form.aluno.errors %}
+                <div class="field-errors">{{ form.aluno.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="treino-field treino-choice-card">
+                <h3>Ou criar novo aluno</h3>
+                <label for="{{ form.nome_aluno.id_for_label }}">{{ form.nome_aluno.label }}</label>
+                {{ form.nome_aluno }}
+                {% if form.nome_aluno.errors %}
+                <div class="field-errors">{{ form.nome_aluno.errors }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if modo_edicao %}
             {% for field in form %}
+            {% if field.name != 'nome' and field.name != 'aluno' and field.name != 'nome_aluno' %}
             <div class="treino-field">
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                 {{ field }}
@@ -60,7 +73,9 @@
                 <div class="field-errors">{{ field.errors }}</div>
                 {% endif %}
             </div>
+            {% endif %}
             {% endfor %}
+            {% endif %}
         </div>
 
         <!-- 🔥 FORMSET (SÓ NA EDIÇÃO) -->
@@ -144,7 +159,7 @@
 
         <!-- BOTÕES -->
         <div class="treino-editor-actions">
-            <button type="submit" class="btn">
+            <button type="submit" class="btn treino-btn-primary">
                 {% if modo_edicao %}Salvar treino{% else %}Criar e continuar{% endif %}
             </button>
 
