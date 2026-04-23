@@ -3,6 +3,32 @@
 from django.db import migrations
 
 
+def _column_exists(schema_editor, table_name, column_name):
+    with schema_editor.connection.cursor() as cursor:
+        columns = schema_editor.connection.introspection.get_table_description(cursor, table_name)
+    return any(column.name == column_name for column in columns)
+
+
+def remove_nome_if_exists(apps, schema_editor):
+    model = apps.get_model('core', 'ExercicioTreino')
+    table_name = model._meta.db_table
+
+    if not _column_exists(schema_editor, table_name, 'nome'):
+        return
+
+    schema_editor.remove_field(model, model._meta.get_field('nome'))
+
+
+def add_nome_if_missing(apps, schema_editor):
+    model = apps.get_model('core', 'ExercicioTreino')
+    table_name = model._meta.db_table
+
+    if _column_exists(schema_editor, table_name, 'nome'):
+        return
+
+    schema_editor.add_field(model, model._meta.get_field('nome'))
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,8 +36,15 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='exerciciotreino',
-            name='nome',
+        migrations.SeparateDatabaseAndState(
+            database_operations=[
+                migrations.RunPython(remove_nome_if_exists, add_nome_if_missing),
+            ],
+            state_operations=[
+                migrations.RemoveField(
+                    model_name='exerciciotreino',
+                    name='nome',
+                ),
+            ],
         ),
     ]

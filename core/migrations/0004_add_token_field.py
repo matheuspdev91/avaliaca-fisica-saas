@@ -1,5 +1,4 @@
-from django.db import migrations, models
-import uuid
+from django.db import migrations
 
 
 class Migration(migrations.Migration):
@@ -8,10 +7,6 @@ class Migration(migrations.Migration):
         ('core', '0003_alter_treino_descricao'),
     ]
 
-    operations = [
-        migrations.AddField(
-            model_name='treino',
-            name='token',
-            field=models.UUIDField(default=uuid.uuid4, editable=False),
-        ),
-    ]
+    # `token` is already created in `0001_initial`. This migration remains only
+    # to preserve numbering in existing environments.
+    operations = []
