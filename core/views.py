@@ -654,7 +654,7 @@ def ver_treino(request, token):
     link = request.build_absolute_uri(treino.get_link())
 
 
-    return render(request, 'treino_publico.html', {
+    return render(request, 'core/treino_publico.html', {
         'treino': treino,
         'link': link
     })
