@@ -2,16 +2,20 @@
 
 {% block content %}
 
-<h1>Treino</h1>
+{% if treino.exercicios.exists %}
+    <ul>
+        {% for item in treino.exercicios.all|dictsort:"ordem" %}
+            <li>
+                <strong>{{ item.exercicio.nome }}</strong><br>
+                Série: {{ item.series }} |
+                Reps: {{ item.repeticoes }} |
+                Descanso: {{ item.descanso }}s
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Nenhum exercício cadastrado.</p>
 
-<p><strong>Aluno:</strong> {{ treino.aluno.nome }}</p>
+{% endif %}
 
-<p>{{ treino.descricao }}</p>
-
-<input type="text" value="{{ link }}" readonly>
-
-<button onclick="navigator.clipboard.writeText('{{ link }}'); alert('Link copiado!')">
-    Copiar link
-</button>
-
-{% endblock %}
+{% endblock }
