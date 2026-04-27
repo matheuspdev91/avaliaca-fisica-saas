@@ -2,6 +2,9 @@ from django.contrib import admin
 from .models import AvaliacaoFisica
 from .models import VideoExercicio, VariacaoExercicio, Treino, ExercicioTreino
 from .models import Aluno
+from .models import GrupoMuscular
+
+admin.site.register(GrupoMuscular)
 
 class AvaliacaoFisicaAdmin(admin.ModelAdmin):
     list_display = (
@@ -58,16 +61,21 @@ class VariacaoInline(admin.TabularInline):
     model = VariacaoExercicio
     extra = 1
 
-@admin.register(VideoExercicio)
-class VideoExercicioAdmin(admin.ModelAdmin):
-    inlines = [VariacaoInline]
+
 
 class ExercicioTreinoInline(admin.TabularInline):
     model = ExercicioTreino
     extra = 1
 
-@admin.register(Treino)
-class TreinoAdmin(admin.ModelAdmin):
-    inlines = [ExercicioTreinoInline]
 
-admin.site.register(Aluno)
+
+@admin.register(VideoExercicio)
+class VideoExercicioAdmin(admin.ModelAdmin):
+    inlines = [VariacaoInline]
+
+    class Media:
+        js = ('js/exercicio_auto.js',)
+
+
+
+

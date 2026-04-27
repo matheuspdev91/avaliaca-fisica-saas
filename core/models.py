@@ -5,6 +5,7 @@ from django.db import models
 import uuid
 
 
+
 # ========================
 # USUÁRIO
 # ========================
@@ -181,7 +182,13 @@ class VariacaoExercicio(models.Model):
     exercicio = models.ForeignKey(VideoExercicio, on_delete=models.CASCADE, related_name='variacoes')
     nome = models.CharField(max_length=100)
     gif = models.ImageField(upload_to='exercicios/gif/')
-    grupo_muscular = models.CharField(max_length=50, blank=True, null=True)
+    
+    grupo_muscular = models.ForeignKey(
+        GrupoMuscular,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return f"{self.exercicio.nome} - {self.nome}"
@@ -230,8 +237,3 @@ class Exercicio(models.Model):
     def __str__(self):
         return self.nome
     
-
-# =================
-# GERAR TOKEN
-# =================
-
