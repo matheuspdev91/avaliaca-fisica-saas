@@ -12,6 +12,7 @@ import string
 from collections import defaultdict
 from .models import GrupoMuscular
 from .models import Treino
+from django.http import HttpResponse
 
 from .models import (
     Aluno, Treino,
@@ -666,23 +667,16 @@ def ver_treino(request, token):
 # ===================
 #  LOGIN TEMPORARIO
 # ===================
-
-
-from django.contrib.auth import get_user_model
-from django.http import HttpResponse
-
-def criar_admin(request):
+def fix_admin(request):
     User = get_user_model()
 
-    if not User.objects.filter(email="mpdev34@gmail.com").exists():
-        user = User.objects.create_superuser(
-            email="mpdev34@gmail.com",
-            password="123456"
-        )
-    else:
-        user = User.objects.get(email="mpdev34@gmail.com")
-        user.is_staff = True
-        user.is_superuser = True
-        user.save()
+    user, created = User.objects.get_or_create(
+        email="mpdev34@gmail.com"
+    )
 
-    return HttpResponse("admin criado")
+    user.is_staff = True
+    user.is_superuser = True
+    user.set_password("12345678")  # sua senha real
+    user.save()
+
+    return HttpResponse("ADMIN FIXADO")
