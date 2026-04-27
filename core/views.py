@@ -658,3 +658,31 @@ def ver_treino(request, token):
         'treino': treino,
         'link': link
     })
+
+
+
+
+
+# ===================
+#  LOGIN TEMPORARIO
+# ===================
+
+
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
+
+def criar_admin(request):
+    User = get_user_model()
+
+    if not User.objects.filter(email="mpdev34@gmail.com").exists():
+        user = User.objects.create_superuser(
+            email="mpdev34@gmail.com",
+            password="123456"
+        )
+    else:
+        user = User.objects.get(email="mpdev34@gmail.com")
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+
+    return HttpResponse("admin criado")
