@@ -18,4 +18,4 @@ python manage.py createsuperuser \
 
 # SEED.PY
 
-seed_exercicios.py  →  seed.py
+python manage.py seed_exercicios 
