@@ -1,23 +1,16 @@
+from functools import wraps
 from django.shortcuts import redirect
-from django.contrib.auth.decorators import user_passes_test
 
+def apenas_personal(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')  # ajusta sua rota
 
-#def eh_aluno(user):
-   #return hasattr(user, 'aluno')
+        # se for aluno → bloqueia
+        if hasattr(request.user, 'aluno'):
+            return redirect('core:painel_aluno')
 
+        return view_func(request, *args, **kwargs)
 
-#def eh_personal(user):
- #   return not hasattr(user, 'aluno')
-
-#def apenas_aluno(view_func):
- #   return user_passes_test(
-  #      eh_aluno,
-   #     login_url ='core:login'
-    #)(view_func)
-
-#def apenas_personal(view_func):
- #   def wrapper(request, *args, **kwargs):
-  #      if hasattr(request.user, 'aluno'):
-   #         return redirect('core:painel_aluno', aluno_id=request.user.aluno.id)
-    #    return view_func(request, *args, **kwargs)
-    #return wrapper
+    return wrapper
