@@ -8,9 +8,14 @@ python manage.py collectstatic --noinput
 
 
 # CRIAR SUPERUSER AUTOMATICO
-python manage.py createsuperuser --noinput || true
+python manage.py createsuperuser \
+  --noinput \
+  --username admin \
+  --email admin@email.com || true
+
+  DJANGO_SUPERUSER_PASSWORD=123456
 
 
 # SEED.PY
 
-python manage.py seed
+seed_exercicios.py  →  seed.py
