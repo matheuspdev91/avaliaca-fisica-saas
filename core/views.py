@@ -38,7 +38,9 @@ def home(request):
     if request.user.is_authenticated:
         if hasattr(request.user, 'aluno'):
             return redirect('core:painel_aluno', aluno_id=request.user.aluno.id)
-        return redirect('core:avaliacoes')
+        else:
+            return redirect('core:fitflix')
+
     return render(request, 'core/home.html')
 
 
