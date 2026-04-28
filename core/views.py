@@ -535,13 +535,16 @@ def adicionar_exercicio(request, treino_id):
 def criar_exercicio(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
-        grupo_muscular = request.POST.get('grupo_muscular')
+
+        grupo_id = request.POST.get('grupo_muscular')
+        grupo = GrupoMuscular.objects.get(id=grupo_id)
+
         imagem = request.FILES.get('imagem')
         gif = request.FILES.get('gif')
 
         exercicio = VideoExercicio.objects.create(
             nome=nome,
-            grupo_muscular=grupo_muscular,
+            grupo_muscular=grupo,
             imagem=imagem
         )
 
@@ -554,8 +557,9 @@ def criar_exercicio(request):
 
         return redirect('core:fitflix')
 
-    return render(request, 'core/criar_exercicio.html')
-
+    return render(request, 'core/criar_exercicio.html', {
+    'grupos': GrupoMuscular.objects.all()
+})
 
 # ====================
 # EXERCÍCIO DETALHE
