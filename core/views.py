@@ -550,12 +550,17 @@ def criar_exercicio(request):
             imagem=imagem
         )
 
+
+        # 2️⃣ cria a variação depois
+        variacao = VariacaoExercicio.objects.create(
+            exercicio=exercicio,
+            nome='Padrão'
+        )
+
+        # 3️⃣ adiciona gif se tiver
         if gif:
-            VariacaoExercicio.objects.create(
-                exercicio=exercicio,
-                nome='Padrão',
-                gif=gif
-            )
+            variacao.gif = gif
+            variacao.save()
 
         return redirect('core:fitflix')
 
