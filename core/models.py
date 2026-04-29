@@ -1,4 +1,5 @@
 from datetime import date
+from cloudinary.models import CloudinaryField
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -169,8 +170,8 @@ class VideoExercicio(models.Model):
         related_name='exercicios'
     )
     
-    gif = models.ImageField(upload_to='exercicios/gif/', blank=True, null=True)
-    imagem = models.ImageField(upload_to='exercicios/imagem/', null=True, blank=True)
+    gif = CloudinaryField('image', blank=True, null=True)
+    imagem = CloudinaryField('image', blank=True, null=True)
     descricao = models.TextField(blank=True)
     criado_em = models.DateTimeField(auto_now_add=True)
 
@@ -181,7 +182,7 @@ class VideoExercicio(models.Model):
 class VariacaoExercicio(models.Model):
     exercicio = models.ForeignKey(VideoExercicio, on_delete=models.CASCADE, related_name='variacoes')
     nome = models.CharField(max_length=100)
-    gif = models.ImageField(upload_to='exercicios/gif/')
+    gif = CloudinaryField('image', blank=False, null=False)
     
     grupo_muscular = models.ForeignKey(
         GrupoMuscular,
