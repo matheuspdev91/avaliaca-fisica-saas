@@ -25,4 +25,4 @@ COPY . .
 EXPOSE 8000
 
 # Produção com Gunicorn
-CMD ["gunicorn", "avaliacao_fisica.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "projeto.wsgi:application", "--bind", "0.0.0.0:8000"]
