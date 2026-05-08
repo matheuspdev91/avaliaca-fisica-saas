@@ -203,7 +203,7 @@ class VideoExercicio(models.Model):
     grupo_muscular = models.ForeignKey(
     GrupoMuscular, on_delete=models.CASCADE, related_name="exercicios"
     )
-    gif = models.FileField(upload_to='gifs/')
+    gif = models.FileField(upload_to='gifs/', max_length=300)
     descricao = models.TextField(blank=True)
     criado_em = models.DateTimeField(auto_now_add=True)
 
@@ -217,7 +217,7 @@ class VariacaoExercicio(models.Model):
     on_delete=models.CASCADE, related_name="variacoes"
     )
     nome = models.CharField(max_length=300)
-    gif = models.FileField(upload_to='gifs/')
+    gif = models.FileField(upload_to='gifs/', max_length=300)
 
     grupo_muscular = models.ForeignKey(
     GrupoMuscular, on_delete=models.SET_NULL, null=True, blank=True
