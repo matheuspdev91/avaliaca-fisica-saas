@@ -8,6 +8,7 @@ import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -70,17 +71,50 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "projeto.wsgi.application"
 
+
 # =========================
 # DATABASE
 # =========================
 
-DATABASES = {
-    "default": dj_database_url.parse(
-        os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True,
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+
+print("DEBUG DATABASE_URL:", DATABASE_URL)
+
+# Compatibilidade com providers antigos
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace(
+        "postgres://",
+        "postgresql://",
+        1
     )
-}
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True,
+        )
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+
+print("DEBUG DATABASES:", DATABASES)
+
+# Validação explícita
+if not DATABASES["default"].get("ENGINE"):
+    raise Exception(
+        f"DATABASE ENGINE não foi carregado. DATABASES atual: {DATABASES}"
+    )
+
+
+
+
 
 # =========================
 # PASSWORD VALIDATION
