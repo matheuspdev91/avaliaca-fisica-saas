@@ -5,6 +5,8 @@ charset-normalizer==3.4.7
 cryptography==46.0.4
 dj-database-url==3.1.0
 Django==5.1
+cloudinary==1.44.2
+django-cloudinary-storage==0.3.0
 djangorestframework==3.17.1
 gunicorn==25.1.0
 idna==3.13
