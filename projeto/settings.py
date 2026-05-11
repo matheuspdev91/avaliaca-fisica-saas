@@ -8,7 +8,6 @@ import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -19,14 +18,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = "True"
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["avaliacao-fisica-saas.onrender.com",
+    "127.0.0.1",
+    "localhost",
+]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://avaliaca-fisica-saas-production.up.railway.app",
-    "https://seuapp.onrender.com",
+     "https://avaliacao-fisica-saas.onrender.com",
 ]
+
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -72,13 +76,12 @@ TEMPLATES = [
 WSGI_APPLICATION = "projeto.wsgi.application"
 
 
+
 # =========================
 # DATABASE
 # =========================
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
-
-print("DEBUG DATABASE_URL:", DATABASE_URL)
 
 # Compatibilidade com providers antigos
 if DATABASE_URL.startswith("postgres://"):
@@ -103,18 +106,6 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
-print("DEBUG DATABASES:", DATABASES)
-
-# Validação explícita
-if not DATABASES["default"].get("ENGINE"):
-    raise Exception(
-        f"DATABASE ENGINE não foi carregado. DATABASES atual: {DATABASES}"
-    )
-
-
-
-
 
 # =========================
 # PASSWORD VALIDATION
@@ -175,12 +166,6 @@ STORAGES = {
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
-    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
-}
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
