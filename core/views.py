@@ -734,7 +734,7 @@ from django.http import JsonResponse
 def buscar_variacoes(request, exercicio_id):
     variacoes = VariacaoExercicio.objects.filter(
         exercicio_id=exercicio_id
-    ).values("id", "nome")
+    ).values("id", "nome", "gif")
 
     return JsonResponse(
         list(variacoes),

@@ -35,6 +35,16 @@
                     </select>
                 </div>
 
+
+                <div class="fitflix-preview">
+                    <img
+                        id="preview-gif"
+                        src=""
+                        alt="Preview exercicio"
+                        style="display:none; max-width:400px; border-radius:16px;"
+                        >
+                </div>
+
                 <div class="fitflix-form-grid">
                     <div class="fitflix-field-group">
                         <label for="series">Séries</label>
@@ -73,6 +83,7 @@
     </div>
 </section>
 
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -81,6 +92,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const variacaoSelect =
         document.getElementById("variacao");
+
+    const preview =
+        document.getElementById("preview-gif");
+
 
     exercicioSelect.addEventListener(
         "change",
@@ -91,6 +106,8 @@ document.addEventListener("DOMContentLoaded", function () {
             variacaoSelect.innerHTML =
                 '<option value="">Carregando...</option>';
 
+            preview.style.display = "none";
+
             if (!exercicioId) {
 
                 variacaoSelect.innerHTML =
@@ -99,11 +116,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-        try {
+            try {
 
-            const response = await fetch(
-                `/api/variacoes/${exercicioId}/`
-            );
+                const response = await fetch(
+                    `/api/variacoes/${exercicioId}/`
+                );
 
                 const variacoes =
                     await response.json();
@@ -121,6 +138,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     option.textContent =
                         variacao.nome;
 
+                    option.dataset.gif =
+                        variacao.gif;
+
                     variacaoSelect.appendChild(option);
                 });
 
@@ -133,6 +153,33 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     );
+
+
+    variacaoSelect.addEventListener(
+        "change",
+        function () {
+
+            const selected =
+                this.options[this.selectedIndex];
+
+            const gif =
+                selected.dataset.gif;
+
+            if (gif) {
+
+                preview.src = "/media/" + gif;
+
+                preview.style.display =
+                    "block";
+
+            } else {
+
+                preview.style.display =
+                    "none";
+            }
+        }
+    );
+
 });
 </script>
 
