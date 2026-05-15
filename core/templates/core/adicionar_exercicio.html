@@ -29,13 +29,9 @@
 
                 <div class="fitflix-field-group">
                     <label for="variacao">Variação</label>
+
                     <select name="variacao" id="variacao" required>
-                        <option value="">Selecione</option>
-                        {% for exercicio in exercicios %}
-                            {% for variacao in exercicio.variacoes.all %}
-                                <option value="{{ variacao.id }}">{{ exercicio.nome }} - {{ variacao.nome }}</option>
-                            {% endfor %}
-                        {% endfor %}
+                        <option value="">Selecione um exercício primeiro</option>
                     </select>
                 </div>
 

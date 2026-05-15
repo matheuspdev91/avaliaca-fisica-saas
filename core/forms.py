@@ -213,6 +213,12 @@ class CriarAlunoForm(forms.ModelForm):
             ),
         }
 
+
+
+     # =================
+     # CRIAR TREINO
+     # =================   
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["telefone"].required = False
@@ -252,6 +258,11 @@ class CriarAlunoForm(forms.ModelForm):
             )
         return email
 
+
+
+# ==================
+# VARIAÇÕES
+# ==================
 
 class ExercicioTreinoForm(forms.ModelForm):
 

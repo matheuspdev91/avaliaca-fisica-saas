@@ -724,3 +724,20 @@ def ver_treino(request, token):
     link = request.build_absolute_uri(treino.get_link())
 
     return render(request, "core/treino_publico.html", {"treino": treino, "link": link})
+
+# =====================
+# CRIAR VIEW JSON
+# =====================
+
+from django.http import JsonResponse
+
+def buscar_variacoes(request, exercicio_id):
+    variacoes = VariacaoExercicio.objects.filter(
+        exercicio_id=exercicio_id
+    ).values("id", "nome")
+
+    return JsonResponse(
+        list(variacoes),
+        safe=False,
+        )
+    

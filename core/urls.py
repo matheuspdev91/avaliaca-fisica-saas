@@ -7,6 +7,11 @@ app_name = "core"
 urlpatterns = [
     path("", views.home, name="home"),
     path("login/", views.login_view, name="login"),
+    path(
+        "api/variacoes/<int:exercicio_id>/",
+        views.buscar_variacoes,
+        name="buscar_variacoes",),
+
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.register_view, name="register"),
     path("alunos/novo/", views.criar_aluno, name="criar_aluno"),
