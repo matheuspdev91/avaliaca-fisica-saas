@@ -73,4 +73,72 @@
     </div>
 </section>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const exercicioSelect =
+        document.getElementById("exercicio");
+
+    const variacaoSelect =
+        document.getElementById("variacao");
+
+    exercicioSelect.addEventListener(
+        "change",
+        async function () {
+
+            const exercicioId = this.value;
+
+            variacaoSelect.innerHTML =
+                '<option value="">Carregando...</option>';
+
+            if (!exercicioId) {
+
+                variacaoSelect.innerHTML =
+                    '<option value="">Selecione um exercício primeiro</option>';
+
+                return;
+            }
+
+            try {
+
+                const response = await fetch(
+                    `/api/variacoes/${exercicioId}/`
+                );
+
+                const variacoes =
+                    await response.json();
+
+                variacaoSelect.innerHTML =
+                    '<option value="">Selecione</option>';
+
+                variacoes.forEach((variacao) => {
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value = variacao.id;
+
+                    option.textContent =
+                        variacao.nome;
+
+                    variacaoSelect.appendChild(option);
+                });
+
+            } catch (error) {
+
+                variacaoSelect.innerHTML =
+                    '<option value="">Erro ao carregar</option>';
+
+                console.error(error);
+            }
+        }
+    );
+
+    exercicioSelect.dispatchEvent(
+        new Event("change")
+    );
+
+});
+</script>
+
 {% endblock %}
